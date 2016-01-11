@@ -1,0 +1,46 @@
+<div ng-controller="kableHelloWorld">
+  <navbar class="kable-navbar">
+    <form role="form" class="fill inline-form" ng-submit="run()" name="expression">
+      <div class="typeahead">
+        <div class="input-group"
+          ng-class="discoverSearch.$invalid ? 'has-error' : ''">
+          <input input-focus
+            ng-model="state.expression"
+            placeholder="Expression ..."
+            aria-label="Expression input"
+            type="text"
+            class="form-control kable-expression auto-grow">
+
+          <button type="submit"
+            ng-disabled="discoverSearch.$invalid"
+            aria-label="Search">
+            <span aria-hidden="true" class="fa fa-search"></span></button>
+        </div>
+      </div>
+    </form>
+  </navbar>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12-sm">
+
+
+        <table class="table table-compact table-striped">
+          <thead>
+            <tr>
+              <th ng-repeat="column in dataTables.header track by $index">{{column}}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat="row in dataTables.rows">
+              <td ng-repeat="cell in ::row track by $index">{{cell}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
