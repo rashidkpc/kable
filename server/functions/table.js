@@ -8,7 +8,7 @@ module.exports = new Strand('index', {
       types: ['dataTable']
     },
     table: {
-      types: ['array']
+      types: ['array', 'null']
     },
     as: {
       types: ['array', 'null']
@@ -16,31 +16,36 @@ module.exports = new Strand('index', {
   },
   help: 'Specify the index to search',
   fn: function stats(args, kblConfig) {
+
     var output = args._pipe_;
-    args.as = args.as || args.table;
 
-    if (args.as.length != args.table.length) throw new Error ('"as" must contain a name for every field in the table');
+    if (args.table) {
+      var oldRows = output.data.rows;
+      var newRows = new Array(oldRows.length);
+      var oldHeader = output.data.header;
+      var newHeader = [];
 
-    var oldRows = output.data.rows;
-    var newRows = new Array(oldRows.length);
+      _.each(args.table, function (column, i) {
+        var index = oldHeader.indexOf(column);
+        if (index === -1) throw new Error ('Unknown column: ' + column);
 
-    var oldHeader = output.data.header;
-    var newHeader = [];
+        newHeader.push(column);
 
-    _.each(args.table, function (column, i) {
-      var index = oldHeader.indexOf(column);
-      if (index === -1) throw new Error ('Unknown column: ' + column);
-
-      newHeader.push(args.as[i]);
-
-      _.each(oldRows, function (row, i) {
-        newRows[i] = newRows[i] || [];
-        newRows[i].push(row[index]);
+        _.each(oldRows, function (row, i) {
+          newRows[i] = newRows[i] || [];
+          newRows[i].push(row[index]);
+        })
       })
-    })
 
-    output.data.rows = newRows;
-    output.data.header = newHeader;
+      output.data.rows = newRows;
+      output.data.header = newHeader;
+    }
+
+    if (args.as) {
+      _.each(args.as, function (column, i) {
+        output.data.header[i] = column;
+      })
+    }
 
     return output;
 

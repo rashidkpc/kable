@@ -4,11 +4,9 @@ var path = require('path');
 var camel = require('to-camel-case');
 
 module.exports = (function (directory) {
-  var types = _.chain(glob.sync(path.resolve(__dirname, './*/*.js'))).map(function (file) {
-    var typeName = camel(file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.')));
+  var types = _.chain(glob.sync(path.resolve(__dirname, './*/index.js'))).map(function (file) {
     var typeDef = require(file);
-
-    return [typeName, typeDef];
+    return [typeDef.name, typeDef];
   }).zipObject().value();
 
   return types;

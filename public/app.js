@@ -1,5 +1,6 @@
 var moment = require('moment');
 require('plugins/kable/less/main.less');
+require('plugins/kable/directives/kable_renderer');
 
 var timelionLogo = require('plugins/kable/header.png');
 
@@ -32,7 +33,7 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
     $http.post('/kable/api/run', {
       expression: $scope.state.expression
     }).then(function (resp) {
-      $scope.dataTables = resp.data.data;
+      $scope.dataTables = resp.data;
       dismissNotifications();
     }).catch(function (err) {
       console.log(err);

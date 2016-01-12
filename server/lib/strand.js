@@ -8,5 +8,13 @@ module.exports = function Strand (name, config) {
 
   this.args = config.args || {};
   this.help = config.help || '';
+
+  /*
+    You are strongly urged to modify the input object
+    vs constructing a new object if returning the same object type.
+
+    This is not enforced, but you're going to annoy a lot of folks if you go
+    around dropping their _render property.
+  */
   this.fn = config.fn;
 };

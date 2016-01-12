@@ -43,6 +43,7 @@ module.exports = new Type('searchRequest', {
         var data = resp.aggregations ? flatten(resp.aggregations) : {header: ['_all'], rows: [[resp.hits.total]]};
         return {
           type: 'dataTable',
+          _panel: {},
           data: data
         }
       });
