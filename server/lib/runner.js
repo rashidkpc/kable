@@ -17,8 +17,6 @@ function invoke(fnName, args) {
   var functionDef = functions[fnName];
   if (!functionDef) throw new Error ('Unknown function: ' + fnName);
 
-  console.log(args);
-
   // Resolve any chains down to their resolved types
   args = _.map(args, function (item) {
     // If you want multiple item.types, add a switch here with the handling
@@ -28,8 +26,6 @@ function invoke(fnName, args) {
       return item;
     }
   });
-
-  console.log(args);
 
   // Cast arguments to required types as needed
   args = Promise.all(args)
@@ -60,24 +56,16 @@ function invoke(fnName, args) {
 }
 
 function invokeChain(chainObj, result) {
-  if (chainObj.chain.length === 0) return invoke('finalize', {_input_: result});
+  if (chainObj.chain.length === 0) return invoke('finalize', [_input_]);
 
   var chain = _.clone(chainObj.chain);
   var link = chain.shift();
 
-  // OK, so what do we do with namedArgs then? We absolutely need to pass an object with arguments to invoke. Fuck.
-
   var args = link.arguments || {};
   args.unshift(result || {type: 'null', value: null});
-
-
-  console.log('not_indexed', args);
-
   args = indexArguments(functions[link.function], args);
 
-  console.log('indexed', args);
   var promise = invoke(link.function, args);
-
   return promise.then(function (result) {
     return invokeChain({type:'chain', chain: chain}, result);
   });
@@ -87,7 +75,6 @@ function run(expression) {
   var result;
   if (expression && expression.trim().length) {
     var chain = Parser.parse(expression);
-    console.log(chain);
     result = invokeChain(chain);
   } else {
     result = {type: 'null', value: null};

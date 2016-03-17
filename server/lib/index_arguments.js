@@ -1,19 +1,46 @@
 var _ = require('lodash');
 
-// Applies to unresolved arguments in the AST
-module.exports = function repositionArguments(functionDef, unorderedArgs) {
-  var args = [];
+function repositionArguments(functionDef, parserArgs) {
+  var orderedArgs = [];
 
-  _.each(unorderedArgs, function (unorderedArg, i) {
-    if (_.isObject(unorderedArg) && unorderedArg.type === 'namedArg') {
+  // We still have named args
+
+  _.each(parserArgs, function (parserArg, i) {
+    if (_.isObject(parserArg) && parserArg.type === 'namedArg') {
       var argIndex = _.findIndex(functionDef.args, function (orderedArg) {
-        return unorderedArg.name === orderedArg.name;
+        return parserArg.name === orderedArg.name;
       });
-      args[argIndex] = unorderedArg.value;
+      orderedArgs[argIndex] = parserArg.value;
     } else {
-      args[i] = unorderedArg;
+      orderedArgs[i] = parserArg;
     }
   });
 
-  return args;
+  // Named args are gone now. Let's index stuff
+
+  return orderedArgs;
 };
+
+function indexArguments(functionDef, orderedArgs) {
+
+  var indexedArgs = {};
+  var argumentsDef = functionDef.args;
+
+  _.each(orderedArgs, function (unorderedArg, i) {
+    if (!argumentsDef[i]) throw new Error ('Unknown argument #' + i + ' supplied to ' + functionDef.name);
+
+    indexedArgs[argumentsDef[i].name] = unorderedArg;
+  });
+
+  return indexedArgs;
+};
+
+
+module.exports = function (functionDef, parserArgs) {
+  var orderedArgs = repositionArguments(functionDef, parserArgs);
+  var indexedArgs = indexArguments(functionDef, orderedArgs);
+
+  indexedArgs.__ordered = orderedArgs;
+
+  return indexedArgs;
+}
