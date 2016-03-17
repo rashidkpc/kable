@@ -95,8 +95,9 @@ function run(expression) {
 }
 
 
-//module.exports = run;
+module.exports = run;
 
+/*
 function logObj(obj, thing) {
   console.log(JSON.stringify(obj, null, ' '));
 }
@@ -108,8 +109,9 @@ function dbg(expression) {
     logObj(result);
   });
 }
+*/
 
 //dbg('index=usagov* | top=geo.country_code count=2 | metric avg=bytes | top=geo.region count=2 | metric avg=bytes');
-dbg('.index(relay*).top(relay_actor, count=0)');
+//dbg('.index(relay*).top(relay_actor, count=0)');
 
 //module.exports = dbg
