@@ -1,6 +1,8 @@
 var moment = require('moment');
 require('plugins/kable/less/main.less');
-require('plugins/kable/directives/kable_renderer');
+require('plugins/kable/components/kable_renderer/kable_renderer');
+require('plugins/kable/directives/textarea_input');
+require('ui/autoload/all');
 
 var timelionLogo = require('plugins/kable/header.png');
 
@@ -20,9 +22,11 @@ require('ui/routes')
     template: require('plugins/kable/templates/index.html')
   });
 
+
 app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
   var notify = new Notifier({ocation: 'Kable'});
   $scope.state = new AppState({expression: ''});
+  $scope.tab = 'vis';
 
   function init() {
     $scope.run();
@@ -30,7 +34,7 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
 
   $scope.run = function () {
     $scope.state.save();
-    $http.post('/kable/api/run', {
+    $http.post('../api/kable/run', {
       expression: $scope.state.expression
     }).then(function (resp) {
       $scope.dataTables = resp.data;
@@ -38,7 +42,7 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
     }).catch(function (err) {
       console.log(err);
       $scope.dataTables = null;
-      notify.error(err.data);
+      notify.error(err);
     });
   }
 

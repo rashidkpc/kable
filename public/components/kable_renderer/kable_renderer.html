@@ -1,0 +1,18 @@
+<div>
+  <div ng-if="dataObj">
+    <div ng-show="!input.panel">
+      <h2>I couldn't find a renderer by that name. <small>Bummer.</small></h2>
+      I know this is probably a difficult time for you. You spent all that time crafting that amazing query and I'm just
+      totally puking on it. I'm sorry. I mean, I'm not <em>that sorry</em>, after all, this is your fault. Why don't you
+      try picking from the list below?
+    </div>
+
+    <select
+      ng-model="input.panel"
+      ng-options="panel as panel.name for panel in panels"
+    ></select>
+  </div>
+
+  <div class="kable-vis"></div>
+
+</div>

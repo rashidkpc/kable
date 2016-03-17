@@ -3,11 +3,16 @@ var Panel = require('../panel');
 var _ = require('lodash');
 var $ = require('jquery');
 
-require('flot_impact');
-require('flotTime_impact');
+require('flot_kable');
+require('flotTime_kable');
 
-module.exports = new Panel('scatter', {
-  help: 'Draw a scatter plot',
+module.exports = new Panel('line', {
+  help: 'Draw a line chart',
+  arg: [
+    {name: 'xaxis', type: 'column', required: true},
+    {name: 'yaxis', type: 'column', required: true},
+    {name: 'color', type: 'column'}
+  ],
   render: function scatterPanel() {
     return function ($scope, $elem, dataObj) {
       console.log('loaded chart');

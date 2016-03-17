@@ -1,0 +1,23 @@
+@import "~ui/styles/variables.less";
+@import (reference) "~ui/styles/mixins";
+
+.kable-expression {
+  width: 95% !important;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.kable-container {
+  margin: 10px;
+}
+
+.kable-quick-settings {
+  background-color: @navbar-default-bg;
+  padding: 5px;
+  color: #eee;
+  border-bottom-right-radius: @border-radius-base;
+
+  .active {
+    color: @brand-warning;
+  }
+}
