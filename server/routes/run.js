@@ -2,18 +2,24 @@ var runner = require('../lib/runner');
 
 module.exports = function (server) {
   server.route({
-    path: '/kable/api/run',
+    path: '/api/kable/run',
     method: 'POST',
     handler: function (req, reply) {
-      console.log(req.payload);
       var resp;
       try {
         resp = runner(req.payload.expression)
-        reply(resp);
       } catch (e) {
+        console.log(e);
         resp = e.toString();
-        reply(resp).code(400);
+        //reply(resp).code(400);
       }
+
+      Promise.resolve(resp).then(function (resp) {
+        reply(resp);
+      }).catch(function (resp) {
+        reply(resp);
+      });
+
     }
   });
 };

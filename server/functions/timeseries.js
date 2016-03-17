@@ -4,29 +4,33 @@ var addAgg = require('../lib/add_agg');
 
 
 module.exports = new Strand('index', {
-  args: {
-    _pipe_: {
+  args: [
+    {
+      name: '_input_',
       types: ['searchRequest']
     },
-    timeseries: {
+    {
+      name: 'field',
       types: ['string']
     },
-    interval: {
+    {
+      name: 'interval',
       types: ['string', 'number', 'null']
     },
-    format: {
+    {
+      name: 'format',
       types: ['string', 'null']
     }
-  },
+  ],
   help: 'Create a timeseries',
   fn: function top(args, kblConfig) {
     return addAgg({
-      searchRequest: args._pipe_,
+      searchRequest: args._input_,
       newContext: true,
-      name: 'time_' + args.timeseries.replace('.', '_'),
+      name: 'time_' + args.field.replace('.', '_'),
       agg: {
         date_histogram: {
-          field: args.timeseries,
+          field: args.field,
           interval: args.interval || '1d'
         }
       }

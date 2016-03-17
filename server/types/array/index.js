@@ -9,6 +9,10 @@ module.exports = new Type('array', {
       return _.map(inputString.split(','), function (elem) {
         return  elem.trim();
       });
+    },
+    number: function (inputNumber) {
+      console.log('castings');
+      return [inputNumber];
     }
   }
 });

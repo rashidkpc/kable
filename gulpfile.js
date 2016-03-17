@@ -30,6 +30,7 @@ var include = [
   'package.json',
   'index.js',
   'node_modules',
+  'bower_components',
   'public',
   'server'
 ];
@@ -123,5 +124,3 @@ gulp.task('package', ['build'], function (done) {
 gulp.task('dev', ['sync'], function (done) {
   gulp.watch(['package.json', 'index.js', 'public/**/*', 'server/**/*'], ['sync', 'lint']);
 });
-
-

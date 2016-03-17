@@ -3,32 +3,35 @@ var Strand = require('../lib/strand');
 var addAgg = require('../lib/add_agg');
 
 module.exports = new Strand('index', {
-  args: {
-    _pipe_: {
+  args: [
+    {
+      name: '_input_',
       types: ['searchRequest']
     },
-    stats: {
+    {
+      name: 'field',
       types: ['array']
     },
-    field: {
+    {
+      name: 'field',
       types: ['string']
     }
-  },
+  ],
   help: 'Specify the index to search',
   fn: function stats(args, kblConfig) {
 
-    _.each(args.stats, function (stat) {
+    _.each(args.field, function (stat) {
       var agg = {};
       agg[stat] = {field: args.field}
       addAgg({
-        searchRequest: args._pipe_,
+        searchRequest: args._input_,
         newContext: false,
         name: stat + '_' + args.field.replace('.', '_'),
         agg: agg
       });
     })
 
-    return args._pipe_;
+    return args._input_;
 
   }
 });

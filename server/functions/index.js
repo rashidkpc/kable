@@ -1,19 +1,21 @@
 var _ = require('lodash');
 var Strand = require('../lib/strand');
 
-
 module.exports = new Strand('index', {
-  args: {
-    _pipe_: {
+  args: [
+    {
+      name: '_input_',
       types: ['searchRequest']
     },
-    index: {
-      types: ['string']
+    {
+      name: 'index',
+      types: ['string'],
+      multi: true
     }
-  },
+  ],
   help: 'Specify the index to search',
   fn: function index(args, kblConfig) {
-    var output = args._pipe_;
+    var output = args._input_;
     output.request.index = args.index;
     return output;
   }

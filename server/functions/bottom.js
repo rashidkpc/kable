@@ -3,26 +3,29 @@ var Strand = require('../lib/strand');
 var addAgg = require('../lib/add_agg');
 
 module.exports = new Strand('index', {
-  args: {
-    _pipe_: {
+  args: [
+    {
+      name: '_input_',
       types: ['searchRequest']
     },
-    bottom: {
+    {
+      name: 'field',
       types: ['string']
     },
-    count: {
+    {
+      name: 'count',
       types: ['number']
     }
-  },
+  ],
   help: 'Specify the index to search',
   fn: function top(args, kblConfig) {
     return addAgg({
-      searchRequest: args._pipe_,
+      searchRequest: args._input_,
       newContext: true,
-      name: 'bottom-' + args.bottom.replace('.', '_'),
+      name: 'bottom-' + args.field.replace('.', '_'),
       agg: {
         terms: {
-          field: args.bottom,
+          field: args.field,
           size: args.count,
           order: {_count: 'asc'}
         }

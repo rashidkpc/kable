@@ -3,22 +3,27 @@ var Strand = require('../lib/strand');
 
 
 module.exports = new Strand('display', {
-  args: {
-    _pipe_: {
+  args: [
+    {
+      name: '_input_',
       types: ['dataTable']
     },
-    display: {
+    {
+      name: 'display',
       types: ['string']
     },
-    _default_: {
-      types: ['string', 'number']
+    {
+      name: 'columns',
+      types: ['array']
     }
-  },
+  ],
+  default_types: ['string', 'number'],
   help: 'Specify the index to search',
   fn: function display(args, kblConfig) {
-    var output = args._pipe_;
+    var output = args._input_;
     output._panel = {
       type: args.display,
+      args: _.omit(args, '_input_', 'display')
     };
 
     return output;

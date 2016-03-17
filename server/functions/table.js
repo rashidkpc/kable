@@ -3,33 +3,39 @@ var Strand = require('../lib/strand');
 var addAgg = require('../lib/add_agg');
 
 module.exports = new Strand('index', {
-  args: {
-    _pipe_: {
+  args: [
+    {
+      name: '_input_',
       types: ['dataTable']
     },
-    table: {
+    {
+      name: 'columns',
       types: ['array', 'null']
     },
-    as: {
+    {
+      name: 'as',
       types: ['array', 'null']
     }
-  },
+  ],
   help: 'Specify the index to search',
   fn: function stats(args, kblConfig) {
 
-    var output = args._pipe_;
+    var output = args._input_;
 
-    if (args.table) {
+    if (args.columns) {
       var oldRows = output.data.rows;
       var newRows = new Array(oldRows.length);
       var oldHeader = output.data.header;
       var newHeader = [];
 
-      _.each(args.table, function (column, i) {
-        var index = oldHeader.indexOf(column);
+      _.each(args.columns, function (column, i) {
+        var isIndex = !_.isNaN(parseInt(column, 10));
+
+        var index = isIndex ? parseInt(column, 10) : oldHeader.indexOf(column);
+        var columnName = isIndex ? oldHeader[index] : column;
         if (index === -1) throw new Error ('Unknown column: ' + column);
 
-        newHeader.push(column);
+        newHeader.push(columnName);
 
         _.each(oldRows, function (row, i) {
           newRows[i] = newRows[i] || [];
