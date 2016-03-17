@@ -17,24 +17,32 @@ function invoke(fnName, args) {
   var functionDef = functions[fnName];
   if (!functionDef) throw new Error ('Unknown function: ' + fnName);
 
+  // Make the arguments to the function into an object
+  args = indexArguments(functions[fnName], args);
+
   // Resolve any chains down to their resolved types
-  args = _.map(args, function (item) {
+  args = _.mapValues(args, function (arg, name) {
     // If you want multiple item.types, add a switch here with the handling
-    if (argType(item) === 'chain') {
-      return invokeChain(item);
+    if (argType(arg) === 'chain') {
+      return invokeChain(arg);
     } else {
-      return item;
+      return arg;
     }
   });
 
+  console.log('args:', args)
+
   // Cast arguments to required types as needed
-  args = Promise.all(args)
+  args = Promise.props(args)
   .then(function (args) {
 
     // Validate and cast arguments, the piped object is available as _pipe_
     return _.mapValues(args, function (arg, name) {
       // Arguments must be defined on the function, or the function must supply a "_default_" argument
-      var argDef = functionDef.args[name] || functionDef.args['_default_'];
+      var argDef = functionDef.args.byName[name] || functionDef.args.byName['_default_'];
+
+      console.log('arg:', name);
+
       if (!argDef) throw 'Unknown argument "' + name + '" supplied to ' + fnName;
 
       try {
@@ -47,7 +55,7 @@ function invoke(fnName, args) {
   })
 
   // Finally pass the arguments to the function
-  args = Promise.all(args)
+  args = Promise.props(args)
   .then(function (args) {
     return functionDef.fn(args, kblConfig);
   });
@@ -56,14 +64,14 @@ function invoke(fnName, args) {
 }
 
 function invokeChain(chainObj, result) {
-  if (chainObj.chain.length === 0) return invoke('finalize', [_input_]);
+  if (chainObj.chain.length === 0) return invoke('finalize', [result]);
 
   var chain = _.clone(chainObj.chain);
   var link = chain.shift();
 
   var args = link.arguments || {};
   args.unshift(result || {type: 'null', value: null});
-  args = indexArguments(functions[link.function], args);
+
 
   var promise = invoke(link.function, args);
   return promise.then(function (result) {
@@ -102,6 +110,6 @@ function dbg(expression) {
 }
 
 //dbg('index=usagov* | top=geo.country_code count=2 | metric avg=bytes | top=geo.region count=2 | metric avg=bytes');
-dbg('.top(count=2, field=geo.region).top(geo.country_code, count=2)');
+dbg('.index(relay*).top(relay_actor, count=0)');
 
 //module.exports = dbg

@@ -40,7 +40,7 @@ module.exports = function (functionDef, parserArgs) {
   var orderedArgs = repositionArguments(functionDef, parserArgs);
   var indexedArgs = indexArguments(functionDef, orderedArgs);
 
-  indexedArgs.__ordered = orderedArgs;
+  //indexedArgs.__ordered = orderedArgs;
 
   return indexedArgs;
 }

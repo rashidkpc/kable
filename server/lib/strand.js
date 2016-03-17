@@ -7,6 +7,7 @@ module.exports = function Strand (name, config) {
   // as long as they don't conflict with ours?
 
   this.args = config.args || {};
+  this.args.byName = _.indexBy(this.args, 'name');
   this.help = config.help || '';
 
   /*
