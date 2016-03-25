@@ -18,19 +18,14 @@
         </div>
       </div>
     </form>
+    <div class="chrome-actions" kbn-chrome-append-nav-controls></div>
   </navbar>
-  <div class="kable-quick-settings">
-    <i ng-click="tab='table'" class="fa fa-table" ng-class="{active: tab==='table'}"></i>
-
-    <i ng-click="tab='vis'" class="fa fa-area-chart" ng-class="{active: tab==='vis'}"></i>
-  </div>
-
   <div class="kable-container">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12-sm">
-          <div kable-renderer="dataTables" ng-if="tab === 'vis'"></div>
-          <div kable-renderer="dataTables" type="table" ng-if="tab === 'table'"></div>
+          <div kable-renderer="dataTables"></div>
+          <div kable-renderer="dataTables" type="table"></div>
         </div>
       </div>
     </div>
