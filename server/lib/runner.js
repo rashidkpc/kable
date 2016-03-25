@@ -30,8 +30,6 @@ function invoke(fnName, args) {
     }
   });
 
-  console.log('args:', args)
-
   // Cast arguments to required types as needed
   args = Promise.props(args)
   .then(function (args) {
@@ -40,8 +38,6 @@ function invoke(fnName, args) {
     return _.mapValues(args, function (arg, name) {
       // Arguments must be defined on the function, or the function must supply a "_default_" argument
       var argDef = functionDef.args.byName[name] || functionDef.args.byName['_default_'];
-
-      console.log('arg:', name);
 
       if (!argDef) throw 'Unknown argument "' + name + '" supplied to ' + fnName;
 
@@ -97,11 +93,12 @@ function run(expression) {
 
 module.exports = run;
 
-/*
+
 function logObj(obj, thing) {
   console.log(JSON.stringify(obj, null, ' '));
 }
 
+/*
 function dbg(expression) {
   console.log(expression);
   var result = run(expression);

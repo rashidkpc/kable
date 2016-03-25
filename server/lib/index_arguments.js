@@ -6,7 +6,7 @@ function repositionArguments(functionDef, parserArgs) {
   // We still have named args
 
   _.each(parserArgs, function (parserArg, i) {
-    if (_.isObject(parserArg) && parserArg.type === 'namedArg') {
+    if (_.isObject(parserArg) && parserArg.type === 'named') {
       var argIndex = _.findIndex(functionDef.args, function (orderedArg) {
         return parserArg.name === orderedArg.name;
       });

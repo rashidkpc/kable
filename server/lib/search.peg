@@ -88,7 +88,7 @@ imperative
  / '+' {return 'must'}
 
 field
- = string:[A-Za-z0-9\-._]+ { return string.join(''); }
+ = string:[A-Za-z0-9\-()._]+ { return string.join(''); }
 
 operator
  = ':<=' {return 'lte'}
@@ -118,7 +118,7 @@ match_solo
  = space? imperative:imperative? value:value space? {
   return {
    type:'eq',
-   field:null,
+   field:'_all',
    value:value,
    imperative: imperative ? imperative : 'should'
   }

@@ -4,6 +4,7 @@ var flatten = require('../../lib/flatten');
 var elasticsearch = require('elasticsearch');
 var client = new elasticsearch.Client({
   host: 'http://admin:notsecure@localhost:9200',
+  requestTimeout: 300000
 });
 
 module.exports = new Type('searchRequest', {
