@@ -1,6 +1,10 @@
 @import "~ui/styles/variables.less";
 @import (reference) "~ui/styles/mixins";
 
+.application {
+  background-color: @kibanaGray6;
+}
+
 .kable-expression {
   width: 95% !important;
   font-family: monospace;
@@ -9,6 +13,45 @@
 
 .kable-container {
   margin: 10px;
+  position: relative;
+}
+
+.kable-add {
+  float: right;
+  font-size: 4em;
+  text-shadow: 2px 2px 2px rgba(214,214,214,1);
+  color: @kibanaPink1;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.kable-panel {
+  box-shadow: 2px 2px 20px 0px rgba(214,214,214,1);
+  background-color: @white;
+  margin-bottom: 10px;
+  position: relative;
+  border-radius: 5px;
+
+  &-icons {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+  }
+
+  &-icon {
+    opacity: 0;
+
+    &:hover {
+      opacity: 0.8 !important;
+    }
+  }
+
+  &:hover &-icon {
+    opacity: 0.3;
+  }
 }
 
 .kable-quick-settings {
@@ -23,6 +66,38 @@
 }
 
 navbar.kable-navbar {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 5px;
+  background-color: @kibanaGray4;
+
+  .input-group {
+    display: flex;
+    flex-direction: row;
+
+    textarea {
+      flex-grow: 1;
+    }
+
+    button {
+      flex-grow: 0;
+    }
+  }
+}
+
+.kable-renderer {
+  position: relative;
+  background-color: @white;
+
+
+  &-config {
+    padding: 10px;
+    height: 350px;
+    max-height: 350px;
+    overflow: auto;
+  }
+
+  &-content {
+    height: 350px;
+    max-height: 350px;
+    overflow: auto;
+  }
 }

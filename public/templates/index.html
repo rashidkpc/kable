@@ -1,33 +1,32 @@
 <div ng-controller="kableHelloWorld">
-  <navbar class="kable-navbar">
-    <form role="form" class="fill inline-form" ng-submit="run()" name="expression">
-      <div class="typeahead">
-        <div class="input-group"
-          ng-class="discoverSearch.$invalid ? 'has-error' : ''">
-          <textarea input-focus
-            ng-model="state.expression"
-            placeholder="Expression ..."
-            aria-label="Expression input"
-            type="text"
-            class="form-control kable-expression textarea-input"></textarea>
-
-          <button type="submit"
-            ng-disabled="discoverSearch.$invalid"
-            aria-label="Search">
-            <span aria-hidden="true" class="fa fa-search"></span></button>
-        </div>
-      </div>
-    </form>
-    <div class="chrome-actions" kbn-chrome-append-nav-controls></div>
-  </navbar>
   <div class="kable-container">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-12-sm">
-          <div kable-renderer="dataTables"></div>
-          <div kable-renderer="dataTables" type="table"></div>
+
+      <div class="row" ng-repeat="panel in state.panels track by $index">
+        <div class="col-12-sm kable-panel">
+          <navbar class="kable-navbar">
+            <form role="form" class="fill inline-form" ng-submit="run()" name="expression">
+              <div class="input-group">
+                <textarea input-focus
+                  ng-model="panel.expression" type="text"
+                  class="form-control kable-expression textarea-input"></textarea>
+                <button type="submit"><span class="fa fa-search"></span></button>
+              </div>
+            </form>
+          </navbar>
+          <kable-renderer renderer-config="panel.config" renderer-data="dataTables[$index]"></kable-renderer>
+
+          <div class="kable-panel-icons">
+            <i class="fa fa-info-circle kable-panel-icon" ng-click="panel.config.editing = !panel.config.editing"></i>
+            <i class="fa fa-times-circle kable-panel-icon" ng-click="removePanel($index)"></i>
+          </div>
         </div>
       </div>
+
+      <div>
+        <i class="fa fa-plus-circle kable-add" ng-click="addPanel()"></i>
+      </div>
+
     </div>
   </div>
 </div>

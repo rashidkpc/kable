@@ -1,5 +1,6 @@
-<div>
-  <div ng-if="dataObj">
+<div ng-if="dataPromise" class="kable-renderer">
+
+  <div ng-hide="config" class="kable-renderer-content">
     <div ng-show="!input.panel">
       <h2>I couldn't find a renderer by that name. <small>Bummer.</small></h2>
       I know this is probably a difficult time for you. You spent all that time crafting that amazing query and I'm just
@@ -7,12 +8,17 @@
       try picking from the list below?
     </div>
 
-    <select
-      ng-model="input.panel"
-      ng-options="panel as panel.name for panel in panels"
-    ></select>
+    <div class="kable-vis"></div>
   </div>
 
-  <div class="kable-vis"></div>
+  <div ng-show="config" class="kable-renderer-config">
+    <form>
+      <select
+        ng-model="input.panel"
+        ng-options="panel as panel.name for panel in panels"
+      ></select>
+    </form>
+  </div>
+
 
 </div>

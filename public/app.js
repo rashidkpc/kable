@@ -22,6 +22,18 @@ require('ui/routes')
     template: require('plugins/kable/templates/index.html')
   });
 
+  /*
+  {
+    expression: '.index(_all)'
+    config: {
+      type: 'line',
+      x: '@timestamp',
+      y: 'count',
+      fill: 'top_user_count'
+      dotSize: 'user_cardinality'
+    }
+  }
+  */
 
 app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
   var notify = new Notifier({location: 'Kable'});
@@ -32,18 +44,41 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
     $scope.run();
   }
 
+  var defaultPanel = {
+    expression: '.index(_all)',
+    config: {
+      type: 'table',
+      editing: false,
+    }
+  }
+
+  $scope.dataTables = [];
+  $scope.state = new AppState({panels: [defaultPanel]});
+
+  $scope.addPanel = function () {
+    $scope.state.panels.push(defaultPanel);
+    $scope.run();
+  }
+
+  $scope.removePanel = function (index) {
+    $scope.state.panels.splice(index, 1);
+    $scope.dataTables.splice(index, 1);
+  }
+
   $scope.run = function () {
     $scope.state.save();
-    var inFlight = $http.post('../api/kable/run', {
-      expression: $scope.state.expression
-    }).then(function (resp) {
-      $scope.dataTables = resp.data;
-      dismissNotifications();
-    }).catch(function (err) {
-      console.log(err);
-      $scope.dataTables = null;
-      notify.error(err);
-    });
+    $scope.dataTables = _.map($scope.state.panels, function (panel) {
+      return $http.post('../api/kable/run', {
+        expression: panel.expression
+      }).then(function (resp) {
+        return resp.data;
+        dismissNotifications();
+      }).catch(function (err) {
+        console.log(err);
+        notify.error(err);
+        return {};
+      });
+    })
   }
 
   function dismissNotifications() {

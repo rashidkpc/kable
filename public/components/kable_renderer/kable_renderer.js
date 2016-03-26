@@ -8,15 +8,15 @@ var template = require('./kable_renderer.html');
 
 app.directive('kableRenderer', function ($compile, Private, $rootScope) {
   return {
-    restrict: 'A',
+    restrict: 'E',
     scope: {
-      dataObj: '=kableRenderer',
+      dataPromise: '=rendererData',
+      rendererConfig: '='
     },
     template: template,
     link: function ($scope, $elem, attrs) {
 
       var panelScope = $rootScope.$new();
-      var visContainer = $('.kable-vis', $elem);
 
       $scope.panels = panels;
       $scope.forceType = Boolean(attrs.type);
@@ -26,21 +26,25 @@ app.directive('kableRenderer', function ($compile, Private, $rootScope) {
       }
 
       function render () {
-        panelScope.$destroy();
-        visContainer.empty();
+        var visContainer = $('.kable-vis', $elem);
 
-        if (!$scope.dataObj) return;
+        panelScope.$destroy();
+
+        if (!$scope.dataPromise) return;
         if (!$scope.input.panel) return;
 
         panelScope = $rootScope.$new();
 
         var renderFn = $scope.input.panel.render;
-        var panelDataObj = angular.copy($scope.dataObj);
-        Private(renderFn)(panelScope, visContainer, panelDataObj);
+
+        $scope.dataPromise.then(function (dataObj) {
+          visContainer.empty();
+          Private(renderFn)(panelScope, visContainer, dataObj);
+        });
       }
 
       $scope.$watch('input.panel', render);
-      $scope.$watch('dataObj', render);
+      $scope.$watch('dataPromise', render);
     }
   };
 });
