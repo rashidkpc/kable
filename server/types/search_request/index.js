@@ -9,6 +9,11 @@ var client = new elasticsearch.Client({
 
 module.exports = new Type('searchRequest', {
   help: 'An unexecuted Elasticsearch request',
+  methods: {
+    getFieldScript: require('./lib/get_field_script'),
+    appendDslField: require('./lib/append_dsl_field'),
+    addAgg: require('./lib/add_agg')
+  },
   from: {
     null: function (emptyObj) {
       // Gee, we're converting from empty, THRILLING.
@@ -38,13 +43,15 @@ module.exports = new Type('searchRequest', {
         aggs: searchRequest.aggs
       }
 
-      // Add a .then here and turn the response into a responseTable
+      console.log(JSON.stringify(request.body, null, ' '));
+
       return client.search(request)
       .then(function (resp) {
         var data = resp.aggregations ? flatten(resp.aggregations) : {header: ['_all'], rows: [[resp.hits.total]]};
         return {
           type: 'dataTable',
           _panel: {},
+          requestBody: request,
           data: data
         }
       });

@@ -1,7 +1,6 @@
 var _ = require('lodash');
 var Strand = require('../lib/strand');
-var addAgg = require('../lib/add_agg');
-
+var searchRequest = require('../types/search_request');
 
 module.exports = new Strand('index', {
   args: [
@@ -20,15 +19,14 @@ module.exports = new Strand('index', {
   ],
   help: 'Specify the index to search',
   fn: function top(args, kblConfig) {
-    return addAgg({
+    var termsConfig = searchRequest.methods.appendDslField(args.field, {size: args.count}, args._input_);
+
+    return searchRequest.methods.addAgg({
       searchRequest: args._input_,
       newContext: true,
       name: 'top_' + args.field.replace('.', '_'),
       agg: {
-        terms: {
-          field: args.field,
-          size: args.count
-        }
+        terms: termsConfig
       }
     });
   }

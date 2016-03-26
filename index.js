@@ -9,6 +9,7 @@ module.exports = function (kibana) {
       app: {
         title: 'Kable',
         description: 'Weeeeee',
+        icon: 'plugins/kable/icon.svg',
         main: 'plugins/kable/app',
         injectVars: function (server, options) {
           var config = server.config();

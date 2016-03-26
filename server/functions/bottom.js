@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var Strand = require('../lib/strand');
-var addAgg = require('../lib/add_agg');
+var searchRequest = require('../types/search_request');
 
-module.exports = new Strand('index', {
+module.exports = new Strand('bottom', {
   args: [
     {
       name: '_input_',
@@ -17,18 +17,16 @@ module.exports = new Strand('index', {
       types: ['number']
     }
   ],
-  help: 'Specify the index to search',
+  help: 'Find the least common values for a field',
   fn: function top(args, kblConfig) {
-    return addAgg({
+    var termsConfig = searchRequest.methods.appendDslField(args.field, {size: args.count, order: {_count: 'asc'}}, args._input_);
+
+    return searchRequest.methods.addAgg({
       searchRequest: args._input_,
       newContext: true,
-      name: 'bottom-' + args.field.replace('.', '_'),
+      name: 'bottom_' + args.field.replace('.', '_'),
       agg: {
-        terms: {
-          field: args.field,
-          size: args.count,
-          order: {_count: 'asc'}
-        }
+        terms: termsConfig
       }
     });
   }

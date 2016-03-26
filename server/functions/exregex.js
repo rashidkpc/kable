@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var Strand = require('../lib/strand');
-var getFieldScript = require('../lib/get_field_script');
+var getFieldScript = require('../types/search_request').methods.getFieldScript;
 
 module.exports = new Strand('exregex', {
   args: [

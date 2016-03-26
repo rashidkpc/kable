@@ -1,8 +1,7 @@
 var _ = require('lodash');
 var Strand = require('../lib/strand');
-var addAgg = require('../lib/add_agg');
 
-module.exports = new Strand('index', {
+module.exports = new Strand('table', {
   args: [
     {
       name: '_input_',
@@ -17,8 +16,8 @@ module.exports = new Strand('index', {
       types: ['array', 'null']
     }
   ],
-  help: 'Specify the index to search',
-  fn: function stats(args, kblConfig) {
+  help: 'Select columns in a table, and optionally rename them',
+  fn: function table(args, kblConfig) {
 
     var output = args._input_;
 

@@ -1,9 +1,9 @@
 var _ = require('lodash');
 var Strand = require('../lib/strand');
-var addAgg = require('../lib/add_agg');
+var searchRequest = require('../types/search_request');
 
 
-module.exports = new Strand('index', {
+module.exports = new Strand('timeseries', {
   args: [
     {
       name: '_input_',
@@ -23,16 +23,15 @@ module.exports = new Strand('index', {
     }
   ],
   help: 'Create a timeseries',
-  fn: function top(args, kblConfig) {
-    return addAgg({
+  fn: function timeseries(args, kblConfig) {
+    var dateHistogramConfig = searchRequest.methods.appendDslField(args.field, {interval: args.interval || '1d'}, args._input_);
+
+    return searchRequest.methods.addAgg({
       searchRequest: args._input_,
       newContext: true,
       name: 'time_' + args.field.replace('.', '_'),
       agg: {
-        date_histogram: {
-          field: args.field,
-          interval: args.interval || '1d'
-        }
+        date_histogram: dateHistogramConfig
       }
     });
   }
