@@ -1,6 +1,6 @@
-module.exports = function(dataTable, column) {
-  var index = dataTable.data.header.indexOf(column);
+module.exports = function(column, rows, columns) {
+  var index = columns.indexOf(column);
   if (index === -1) throw new Error ('Unknown column: ' + column);
 
-  return _.pluck(dataTable.data.rows, index);
+  return _.pluck(rows, index);
 }

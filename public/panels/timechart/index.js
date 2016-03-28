@@ -18,9 +18,9 @@ module.exports = new Panel('timechart', {
     },
     {
       name: 'yaxis',
-      type: 'column',
+      type: 'columns',
       required: true,
-      help: 'The column with the values to plot'
+      help: 'The columns whose values you wish to plot'
     },
     {
       name: 'color',
@@ -46,7 +46,15 @@ module.exports = new Panel('timechart', {
           margin: 10,
         },
         legend: {position: 'nw'},
-        colors: ['#8c8'],
+        colors: [
+          '#6eadc1',
+          '#57c17b',
+          '#6f87d8',
+          '#663db8',
+          '#bc52bc',
+          '#9e3533',
+          '#daa05d'
+        ],
       };
 
       function drawPlot() {
@@ -55,12 +63,38 @@ module.exports = new Panel('timechart', {
           return;
         }
 
-        var timestamps = getColumn(dataTable, config.xaxis);
-        var values = getColumn(dataTable, config.yaxis);
-        var data = _.zip(timestamps, values);
+        var rows = dataTable.data.rows;
+        var columns = dataTable.data.header;
+
+        var grouped;
+        if (config.color.length) {
+          grouped = _.groupBy(rows, function (row) {
+            return _.chain(config.color)
+            .map(function (color) {return columns.indexOf(color);})
+            .map(function (index) {return row[index];})
+            .values().join('::')
+          });
+        } else {
+          grouped = {
+            _all: rows
+          };
+        }
+
+        var data = _.flatten(_.map(grouped, function (rows, label) {
+          return _.map(config.yaxis, function (column) {
+            var timestamps = getColumn(config.xaxis, rows, columns);
+            var values = getColumn(column, rows, columns);
+
+            return {
+              label: `${label}::${column}`,
+              data: _.zip(timestamps, values),
+              shadowSize: 0
+            };
+          })
+        }));
 
         $elem.height($elem.parent().parent().height());
-        $scope.plot = $.plot($elem, [{label: config.yaxis, data: data}], defaultOptions);
+        $scope.plot = $.plot($elem, data, defaultOptions);
       }
 
       $(window).resize(function () {
@@ -72,8 +106,6 @@ module.exports = new Panel('timechart', {
       });
 
       drawPlot();
-
-
 
     }
   }
