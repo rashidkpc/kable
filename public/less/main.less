@@ -1,5 +1,14 @@
 @import "~ui/styles/variables.less";
 @import (reference) "~ui/styles/mixins";
+@import "~ui-select/dist/select.css";
+
+.formly {
+  .form-control {
+    background-color: @input-bg;
+    color: @input-color;
+    border-color: @input-border;
+  }
+}
 
 .application {
   background-color: @kibanaGray6;
@@ -28,17 +37,55 @@
   }
 }
 
+
+
 .kable-panel {
   box-shadow: 2px 2px 20px 0px rgba(214,214,214,1);
   background-color: @white;
   margin-bottom: 10px;
-  position: relative;
-  border-radius: 5px;
+
+  kable-renderer {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 350px;
+  }
+
+  &-body {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &-config, &-content {
+    background-color: @white;
+    position: absolute;
+    top: -350px; right: 0; bottom: 0; left: 0;
+    height: 350px;
+    max-height: 350px;
+    overflow: auto;
+    transition: transform 0.3s;
+  }
+
+  &-config {
+    padding: 10px;
+    border-bottom: 5px solid @kibanaYellow1;
+  }
+
+  &-content {
+    border-bottom: 5px solid @kibanaGreen1;
+  }
+
+  &-on-top {
+    transform: translate(0px, 350px);
+    transition: transform 0.3s;
+    transition-delay: 0.3s;
+  }
 
   &-icons {
     position: absolute;
     bottom: 5px;
     right: 10px;
+    z-index: 20;
   }
 
   &-icon {
@@ -80,24 +127,5 @@ navbar.kable-navbar {
     button {
       flex-grow: 0;
     }
-  }
-}
-
-.kable-renderer {
-  position: relative;
-  background-color: @white;
-
-
-  &-config {
-    padding: 10px;
-    height: 350px;
-    max-height: 350px;
-    overflow: auto;
-  }
-
-  &-content {
-    height: 350px;
-    max-height: 350px;
-    overflow: auto;
   }
 }

@@ -4,6 +4,7 @@
 
       <div class="row" ng-repeat="panel in state.panels track by $index">
         <div class="col-12-sm kable-panel">
+
           <navbar class="kable-navbar">
             <form role="form" class="fill inline-form" ng-submit="run()" name="expression">
               <div class="input-group">
@@ -14,12 +15,34 @@
               </div>
             </form>
           </navbar>
-          <kable-renderer renderer-config="panel.config" renderer-data="dataTables[$index]"></kable-renderer>
 
-          <div class="kable-panel-icons">
-            <i class="fa fa-info-circle kable-panel-icon" ng-click="panel.config.editing = !panel.config.editing"></i>
-            <i class="fa fa-times-circle kable-panel-icon" ng-click="removePanel($index)"></i>
+          <div class="kable-panel-body">
+
+            <kable-renderer ng-class="{'kable-panel-on-top': !panel.config.editing}"
+              renderer-config="panel.config"
+              renderer-data="dataTables[$index]"
+              class="kable-panel-content">
+            </kable-renderer>
+
+
+            <div class="kable-panel-config" ng-class="{'kable-panel-on-top': panel.config.editing}">
+              <kable-panel-config
+                config-data="dataTables[$index]"
+                config-config="panel.config">
+              </kable-panel-config>
+            </div>
+
+            <div class="kable-panel-icons">
+              <i class="fa fa-info-circle kable-panel-icon" ng-click="panel.config.editing = !panel.config.editing"></i>
+              <i class="fa fa-times-circle kable-panel-icon" ng-click="removePanel($index)"></i>
+            </div>
+
+
+
+
           </div>
+
+
         </div>
       </div>
 

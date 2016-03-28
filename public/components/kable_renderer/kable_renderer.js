@@ -2,8 +2,7 @@ var _ = require('lodash');
 var $ = require('jquery');
 
 var app = require('ui/modules').get('apps/timelion', []);
-
-var panels = require('plugins/kable/panels/load');
+var panelTypes = require('plugins/kable/panels/load');
 var template = require('./kable_renderer.html');
 
 app.directive('kableRenderer', function ($compile, Private, $rootScope) {
@@ -11,19 +10,12 @@ app.directive('kableRenderer', function ($compile, Private, $rootScope) {
     restrict: 'E',
     scope: {
       dataPromise: '=rendererData',
-      rendererConfig: '='
+      config: '=rendererConfig',
     },
     template: template,
-    link: function ($scope, $elem, attrs) {
+    link: function ($scope, $elem) {
 
       var panelScope = $rootScope.$new();
-
-      $scope.panels = panels;
-      $scope.forceType = Boolean(attrs.type);
-
-      $scope.input = {
-        panel: $scope.forceType ? panels[attrs.type] : panels['table']
-      }
 
       function render () {
         var visContainer = $('.kable-vis', $elem);
@@ -31,19 +23,19 @@ app.directive('kableRenderer', function ($compile, Private, $rootScope) {
         panelScope.$destroy();
 
         if (!$scope.dataPromise) return;
-        if (!$scope.input.panel) return;
+        if (!$scope.config.type) return;
 
         panelScope = $rootScope.$new();
 
-        var renderFn = $scope.input.panel.render;
+        var renderFn = panelTypes[$scope.config.type].render;
 
         $scope.dataPromise.then(function (dataObj) {
           visContainer.empty();
-          Private(renderFn)(panelScope, visContainer, dataObj);
+          Private(renderFn)(panelScope, visContainer, dataObj, $scope.config);
         });
       }
 
-      $scope.$watch('input.panel', render);
+      $scope.$watchCollection('config', render);
       $scope.$watch('dataPromise', render);
     }
   };

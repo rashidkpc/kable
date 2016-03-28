@@ -9,6 +9,8 @@ module.exports = function Panel (name, config) {
 
   this.accepts = config.accepts || [];
 
+  this.args = config.args || [];
+
   if (!config.render) throw new Error ('Panel must have a rendering function');
 
   this.render = config.render || function ($scope, $elem, dataObj) {
