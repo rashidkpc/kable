@@ -67,7 +67,7 @@ module.exports = new Panel('timechart', {
         var columns = dataTable.data.header;
 
         var grouped;
-        if (config.color.length) {
+        if (config.color && config.color.length) {
           grouped = _.groupBy(rows, function (row) {
             return _.chain(config.color)
             .map(function (color) {return columns.indexOf(color);})
