@@ -36,23 +36,30 @@ module.exports = new Type('searchRequest', {
   },
   to: {
     dataTable: function (searchRequest) {
+
       var request = searchRequest.request;
       request.body = {
-        size: 0,
+        size: searchRequest.docs || 0,
         query: searchRequest.query,
-        aggs: searchRequest.aggs
+        aggs: searchRequest.aggs,
+        script_fields: _.mapValues(searchRequest.scripts, function (script) {
+          return {script: {inline: script, lang: 'javascript'}};
+        }),
       }
-
-      console.log(JSON.stringify(request.body, null, ' '));
+      //console.log(JSON.stringify(request.body, null, ' '));
 
       return client.search(request)
       .then(function (resp) {
         var data = resp.aggregations ? flatten(resp.aggregations) : {header: ['_all'], rows: [[resp.hits.total]]};
+
+        //console.log(JSON.stringify(resp.hits, null, ' '));
+
         return {
           type: 'dataTable',
           _panel: {},
           requestBody: request,
-          data: data
+          data: data,
+          docs: resp.hits.hits
         }
       });
     }
