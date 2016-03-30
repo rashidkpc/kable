@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var argType = require('./arg_type');
 
-module.exports = function (types) {
+module.exports = function (types, kblConfig) {
   return function (arg, allowedTypes) {
     // The supplied argument types must be defined in ./types
     var suppliedType = argType(arg);
@@ -18,8 +18,8 @@ module.exports = function (types) {
     _.each(allowedTypes, function (allowedType) {
       var allowedTypeDef = types[allowedType];
 
-      if (suppliedTypeDef.to[allowedType]) result = suppliedTypeDef.to[allowedType](arg);
-      if (allowedTypeDef.from[suppliedType]) result = allowedTypeDef.from[suppliedType](arg);
+      if (suppliedTypeDef.to[allowedType]) result = suppliedTypeDef.to[allowedType](arg, kblConfig);
+      if (allowedTypeDef.from[suppliedType]) result = allowedTypeDef.from[suppliedType](arg, kblConfig);
     })
 
     if (_.isUndefined(result)) throw 'Could not cast ' + suppliedType + ' to any of ' + allowedTypes.join(', ');

@@ -1,13 +1,17 @@
-var runner = require('../lib/runner');
+var runnerFn = require('../lib/runner');
 
 module.exports = function (server) {
   server.route({
     path: '/api/kable/run',
     method: 'POST',
     handler: function (req, reply) {
+      var kblConfig = {server: server, request: req.payload};
+
+      var runner = runnerFn(kblConfig);
+
       var resp;
       try {
-        resp = runner(req.payload.expression)
+        resp = runner(req.payload)
       } catch (e) {
         console.log(e);
         resp = e.toString();

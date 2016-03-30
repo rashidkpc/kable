@@ -38,12 +38,17 @@ require('ui/routes')
   }
   */
 
-app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
+app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, timefilter) {
+  timefilter.enabled = true;
+  $scope.timefilter = timefilter;
+
   var notify = new Notifier({location: 'Kable'});
 
   $scope.panelTypes = panelTypes;
   $scope.state = new AppState({expression: ''});
   $scope.tab = 'vis';
+
+  $scope.topNavMenu = [];
 
   function init() {
     $scope.run();
@@ -72,9 +77,14 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
 
   $scope.run = function () {
     $scope.state.save();
+    var timefilterBounds = $scope.timefilter.getBounds();
     $scope.dataTables = _.map($scope.state.panels, function (panel) {
       return $http.post('../api/kable/run', {
-        expression: panel.expression
+        expression: panel.expression,
+        time: {
+          from: timefilterBounds.min.valueOf(),
+          to: timefilterBounds.max.valueOf()
+        }
       }).then(function (resp) {
         return resp.data;
         dismissNotifications();
@@ -85,6 +95,8 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier) {
       });
     })
   }
+
+  $scope.$listen(timefilter, 'fetch', $scope.run);
 
   function dismissNotifications() {
     unsafeNotifications.splice(0, unsafeNotifications.length);

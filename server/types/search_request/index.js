@@ -35,7 +35,7 @@ module.exports = new Type('searchRequest', {
     }
   },
   to: {
-    dataTable: function (searchRequest) {
+    dataTable: function (searchRequest, kblConfig) {
 
       var request = searchRequest.request;
       request.body = {
@@ -46,7 +46,15 @@ module.exports = new Type('searchRequest', {
           return {script: {inline: script, lang: 'javascript'}};
         }),
       }
-      //console.log(JSON.stringify(request.body, null, ' '));
+
+      if (searchRequest.timefield) {
+        var wrapper = {bool:{filter:{range:{}}}};
+        wrapper.bool.filter.range[searchRequest.timefield] = {lte: kblConfig.request.time.to, gte: kblConfig.request.time.from};
+        wrapper.bool.must = searchRequest.query;
+        request.body.query = wrapper;
+      }
+
+      console.log(JSON.stringify(request.body, null, ' '));
 
       return client.search(request)
       .then(function (resp) {

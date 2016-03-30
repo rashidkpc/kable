@@ -9,6 +9,11 @@ module.exports = new Strand('index', {
     },
     {
       name: 'index',
+      types: ['string', 'null'],
+      multi: true
+    },
+    {
+      name: 'timefield',
       types: ['string'],
       multi: true
     }
@@ -16,7 +21,8 @@ module.exports = new Strand('index', {
   help: 'Specify the index to search',
   fn: function index(args, kblConfig) {
     var output = args._input_;
-    output.request.index = args.index;
+    output.request.index = args.index || '_all';
+    output.timefield = args.timefield;
     return output;
   }
 });

@@ -1,10 +1,7 @@
-<div ng-controller="kableHelloWorld">
+<div ng-controller="kableHelloWorld" class="app-container">
 
-  <navbar class="kibana-nav-options">
-    <div class="button-group kibana-nav-actions" role="toolbar">
-      <kbn-global-timepicker></kbn-global-timepicker>
-    </div>
-  </navbar>
+  <kbn-top-nav name="dashboard" config="topNavMenu">
+  </kbn-top-nav>
 
   <div class="kable-container">
     <div class="container-fluid">
