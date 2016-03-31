@@ -1,10 +1,36 @@
 // search q=* | top=country count=3 | metric avg=bytes | bins=bytes size=250000 | metric avg=bytes
 
+// This should be the value of the named agg in the response, without the agg.
+// Eg if you had {myagg: {value:10}}, you would pass this the {value:10}
+// Eventually break this out into other files with handlers for each kind of metric agg
+
 var _ = require('lodash');
 module.exports = function flatten (obj) {
   var headerComplete;
   var header = [];
   var rows = [];
+
+  function getMetricHandler (aggResult) {
+    if (aggResult.hits) { // top_hits
+      return function (row, val, key) {
+        _.each(_.get(val, 'hits.hits[0].fields'), function (fieldVal, fieldName) {
+          if (!headerComplete) addHeader(key + '_' + fieldName);
+          row.push(fieldVal.join(', '));
+        })
+
+      };
+    } else { // everything else
+      return function (row, val, key) {
+        if (!headerComplete) addHeader(key);
+        row.push(val.value);
+      }
+    }
+  }
+
+  function appendMetric(row, val, key) {
+    var appendFn = getMetricHandler(val);
+    appendFn(row, val, key)
+  }
 
   function addHeader(name) {
     var i = 0;
@@ -15,7 +41,6 @@ module.exports = function flatten (obj) {
     }
     header.push(name);
   }
-
 
   function processBucketAgg(row, bucketAgg) {
     var sample = bucketAgg.buckets[0];
@@ -43,10 +68,10 @@ module.exports = function flatten (obj) {
     _.forOwn(obj, function (val, key) {
       if (_.isPlainObject(val)) {
         if (val.buckets) {
+          // Its a bucket agg!
           bucketAggs.push({name: key, buckets: val.buckets});
         } else {
-          if (!headerComplete) addHeader(key);
-          row.push(val.value);
+          appendMetric(row, val, key);
         }
       }
     });

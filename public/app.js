@@ -48,8 +48,6 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
   $scope.state = new AppState({expression: ''});
   $scope.tab = 'vis';
 
-  $scope.topNavMenu = [];
-
   function init() {
     $scope.run();
   }
