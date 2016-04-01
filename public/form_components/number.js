@@ -1,11 +1,13 @@
 module.exports = function (arg, config, dataTable) {
   return {
     key: arg.name,
-    type: 'horizontalInput',
+    type: 'kblInput',
+    className: 'col-sm-' + (arg.span || 12),
     templateOptions: {
       inputType: 'number',
       label: arg.name,
       placeholder: arg.help,
+      span: arg.span
     }
   };
 };

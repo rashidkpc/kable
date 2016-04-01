@@ -14,18 +14,21 @@ module.exports = new Panel('timechart', {
       name: 'xaxis',
       type: 'column',
       required: true,
+      span: 4,
       help: 'The column containing your timestamps in millis-since-epoch format'
     },
     {
       name: 'yaxis',
       type: 'columns',
       required: true,
+      span: 4,
       help: 'The columns whose values you wish to plot'
     },
     {
       name: 'color',
       type: 'columns',
-      help: 'A column to group on to create distinct series. Each unique value in this column will be given its own color.'
+      span: 4,
+      help: 'Columns with which to create distinct series. Each unique value in this column will be given its own color.'
     }
   ],
   render: function timechartPanel() {

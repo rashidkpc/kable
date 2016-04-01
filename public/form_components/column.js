@@ -9,12 +9,14 @@ module.exports = function (arg, config, dataTable) {
 
   return {
     key: arg.name,
-    type: 'ui-select-single',
+    type: 'kblSelectSingle',
+    className: 'col-sm-' + (arg.span || 12),
     templateOptions: {
       optionsAttr: 'formly-options',
       label: arg.name,
       description: arg.help,
-      options: options
+      options: options,
+      span: arg.span
     }
   };
 };

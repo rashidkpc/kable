@@ -10,23 +10,19 @@ var app = require('ui/modules').get('apps/kable', [
 app.config(function (formlyConfigProvider) {
 
   formlyConfigProvider.setWrapper({
-    name: 'horizontalBootstrapLabel',
+    name: 'kblInputLabel',
     template: [
-      '<label for="{{::id}}" class="col-sm-1 control-label">',
+      '<label for="{{::id}}">',
         '{{to.label}} {{to.required ? "*" : ""}}',
       '</label>',
-      '<div class="col-sm-10">',
-        '<formly-transclude></formly-transclude>',
-      '</div>'
+      '<formly-transclude></formly-transclude>',
     ].join(' ')
   });
 
   formlyConfigProvider.setWrapper({
-    name: 'horizontalBootstrapCheckbox',
+    name: 'kblCheckboxLabel',
     template: [
-      '<div class="col-sm-offset-2 col-sm-10">',
-        '<formly-transclude></formly-transclude>',
-      '</div>'
+      '<formly-transclude></formly-transclude>',
     ].join(' ')
   });
 

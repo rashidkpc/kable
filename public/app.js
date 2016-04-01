@@ -38,7 +38,7 @@ require('ui/routes')
   }
   */
 
-app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, timefilter) {
+app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, timefilter, $window) {
   timefilter.enabled = true;
   $scope.timefilter = timefilter;
 

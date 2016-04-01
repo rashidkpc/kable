@@ -7,27 +7,27 @@ var app = require('ui/modules').get('apps/kable', [require('angular-formly'), re
 app.config(function (formlyConfigProvider) {
 
   formlyConfigProvider.setType({
-    name: 'horizontalInput',
+    name: 'kblInput',
     extends: 'input',
-    wrapper: ['horizontalBootstrapLabel', 'bootstrapHasError']
+    wrapper: ['kblInputLabel', 'bootstrapHasError']
   });
 
   formlyConfigProvider.setType({
-    name: 'horizontalSelect',
+    name: 'kblSelect',
     extends: 'select',
-    wrapper: ['horizontalBootstrapLabel', 'bootstrapHasError']
+    wrapper: ['kblInputLabel', 'bootstrapHasError']
   });
 
   formlyConfigProvider.setType({
-    name: 'horizontalCheckbox',
+    name: 'kblCheckbox',
     extends: 'checkbox',
-    wrapper: ['horizontalBootstrapCheckbox', 'bootstrapHasError']
+    wrapper: ['kblCheckboxLabel', 'bootstrapHasError']
   });
 
   // UI Select types
   formlyConfigProvider.setType({
-    name: 'ui-select-single',
-    extends: 'horizontalSelect',
+    name: 'kblSelectSingle',
+    extends: 'kblSelect',
     template: `
     <ui-select ng-model="model[options.key]" theme="bootstrap" ng-required="{{to.required}}" ng-disabled="{{to.disabled}}" reset-search-input="false">
       <ui-select-match placeholder="{{to.placeholder}}"> {{$select.selected.name}} </ui-select-match>
@@ -39,8 +39,8 @@ app.config(function (formlyConfigProvider) {
   });
 
   formlyConfigProvider.setType({
-    name: 'ui-select-multiple',
-    extends: 'horizontalSelect',
+    name: 'kblSelectMultiple',
+    extends: 'kblSelect',
     template: `
     <ui-select multiple ng-model="model[options.key]" theme="bootstrap" ng-required="{{to.required}}" ng-disabled="{{to.disabled}}">
       <ui-select-match placeholder="{{to.placeholder}}">{{$item.name}}</ui-select-match>
