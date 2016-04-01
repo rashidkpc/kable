@@ -6,7 +6,7 @@ module.exports = function (arg, config, dataTable) {
     templateOptions: {
       inputType: 'number',
       label: arg.name,
-      placeholder: arg.help,
+      description: arg.help,
       span: arg.span
     }
   };

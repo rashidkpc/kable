@@ -7,6 +7,7 @@ var $ = require('jquery');
 require('flot_kable');
 require('flotTime_kable');
 
+
 module.exports = new Panel('timechart', {
   help: 'Draw a timeseries chart',
   args: [
@@ -29,12 +30,34 @@ module.exports = new Panel('timechart', {
       type: 'columns',
       span: 4,
       help: 'Columns with which to create distinct series. Each unique value in this column will be given its own color.'
+    },
+    {
+      name: 'point_size',
+      type: 'column',
+      span: 3,
+      help: 'Column describing the size of points to draw'
+    },
+    {
+      name: 'max_size',
+      type: 'number',
+      span: 1,
+      help: 'Max size of a point in pixels'
+    },
+    {
+      name: 'point_opacity',
+      type: 'column',
+      span: 4,
+      help: 'Column describing the darkness of the point'
     }
   ],
   render: function timechartPanel() {
     return function ($scope, $elem, dataTable, config) {
       console.log('loaded chart');
+
       var defaultOptions = {
+        series: {
+          lines: {show: true}
+        },
         xaxis: {
           mode: 'time',
           timezone: 'browser',
@@ -57,7 +80,7 @@ module.exports = new Panel('timechart', {
           '#bc52bc',
           '#9e3533',
           '#daa05d'
-        ],
+        ]
       };
 
       function drawPlot() {
@@ -85,12 +108,48 @@ module.exports = new Panel('timechart', {
 
         var data = _.flatten(_.map(grouped, function (rows, label) {
           return _.map(config.yaxis, function (column) {
-            var timestamps = getColumn(config.xaxis, rows, columns);
-            var values = getColumn(column, rows, columns);
+            var flotColumns = [
+              getColumn(config.xaxis, rows, columns),
+              getColumn(column, rows, columns),
+            ];
+
+
+            function bubbleProvider (flotColumns) {
+              var length = flotColumns[0].length;
+              var radii = flotColumns[2] || _.fill(Array(length), 30);
+              var fill = flotColumns[3] || _.fill(Array(length), 0);
+
+              var maxRadii = _.max(radii);
+              var maxFill = _.max(fill);
+
+              var point = 0;
+              return function (ctx, x, y, radius) {
+                var radius = radii[point] / maxRadii * (config.max_size || 10);
+                var pointFill = (fill[point] / maxFill);
+
+                ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+                ctx.globalAlpha = pointFill;
+                point++;
+              }
+              return bubble;
+            }
+
+            var points;
+            if (config.point_size) {
+              flotColumns.push(getColumn(config.point_size, rows, columns));
+              if (config.point_opacity) flotColumns.push(getColumn(config.point_opacity, rows, columns));
+
+              points = {
+                show: true,
+                fill: 1,
+                fillColor: false,
+                symbol: bubbleProvider(flotColumns)};
+            }
 
             return {
+              points: points,
               label: `${label}::${column}`,
-              data: _.zip(timestamps, values),
+              data: _.zip.apply(this, flotColumns),
               shadowSize: 0
             };
           })
