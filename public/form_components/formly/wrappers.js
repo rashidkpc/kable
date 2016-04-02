@@ -22,6 +22,9 @@ app.config(function (formlyConfigProvider) {
   formlyConfigProvider.setWrapper({
     name: 'kblCheckboxLabel',
     template: [
+      '<label for="{{::id}}">',
+        '{{to.label}} {{to.required ? "*" : ""}}',
+      '</label>',
       '<formly-transclude></formly-transclude>',
     ].join(' ')
   });

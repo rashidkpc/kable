@@ -21,7 +21,17 @@ app.config(function (formlyConfigProvider) {
   formlyConfigProvider.setType({
     name: 'kblCheckbox',
     extends: 'checkbox',
-    wrapper: ['kblCheckboxLabel', 'bootstrapHasError']
+    template: `
+    <div>
+      <label>
+        {{to.label}}
+      </label>
+      <div>
+        <input ng-required="{{to.required}}" ng-disabled="{{to.disabled}}" ng-model="model[options.key]" type="checkbox">
+      </div>
+    </div>
+    `,
+    wrapper: ['bootstrapHasError']
   });
 
   // UI Select types

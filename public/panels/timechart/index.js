@@ -27,27 +27,39 @@ module.exports = new Panel('timechart', {
     },
     {
       name: 'color',
+      label: 'Color Split',
       type: 'columns',
       span: 4,
       help: 'Columns with which to create distinct series. Each unique value in this column will be given its own color.'
     },
     {
       name: 'point_size',
+      label: 'Point Size',
       type: 'column',
-      span: 3,
+      span: 2,
       help: 'Column describing the size of points to draw'
     },
     {
       name: 'max_size',
+      label: 'Max Point Size',
       type: 'number',
-      span: 1,
+      span: 2,
       help: 'Max size of a point in pixels'
     },
     {
       name: 'point_opacity',
+      label: 'Point Shade',
       type: 'column',
-      span: 4,
-      help: 'Column describing the darkness of the point'
+      span: 2,
+      help: 'Column describing the opacity of the point'
+    },
+    {
+      name: 'show_lines',
+      label: 'Lines',
+      type: 'checkbox',
+      default: true,
+      span: 2,
+      help: 'Show connecting lines'
     }
   ],
   render: function timechartPanel() {
@@ -56,7 +68,7 @@ module.exports = new Panel('timechart', {
 
       var defaultOptions = {
         series: {
-          lines: {show: true}
+          lines: {show: config.show_lines}
         },
         xaxis: {
           mode: 'time',

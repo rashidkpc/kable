@@ -5,7 +5,7 @@ module.exports = function (arg, config, dataTable) {
     className: 'col-sm-' + (arg.span || 12),
     templateOptions: {
       inputType: 'number',
-      label: arg.name,
+      label: arg.label || arg.name,
       description: arg.help,
       span: arg.span
     }

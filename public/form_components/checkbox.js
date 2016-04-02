@@ -1,12 +1,13 @@
 module.exports = function (arg, config, dataTable) {
   return {
     key: arg.name,
-    type: 'kblInput',
-    className: 'col-sm-' + (arg.span || 12),
+    type: 'kblCheckbox',
+    className: 'col-sm-' + (arg.span || 1),
+    defaultValue: arg.default,
     templateOptions: {
-      inputType: 'text',
+      inputType: 'checkbox',
       label: arg.label || arg.name,
-      placeholder: arg.help,
+      description: arg.help,
       span: arg.span
     }
   };

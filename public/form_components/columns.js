@@ -13,7 +13,7 @@ module.exports = function (arg, config, dataTable) {
     className: 'col-sm-' + (arg.span || 12),
     templateOptions: {
       optionsAttr: 'formly-options',
-      label: arg.name,
+      label: arg.label || arg.name,
       description: arg.help,
       options: options,
       span: arg.span
