@@ -5,9 +5,9 @@
 
   <div class="kable-container">
     <div class="container-fluid">
+      <div class="row">
 
-      <div class="row" ng-repeat="panel in state.panels track by $index">
-        <div class="col-12-sm kable-panel">
+        <div class="col-12-sm kable-panel" ng-repeat="panel in state.panels track by $index">
 
           <navbar class="kable-navbar">
             <form role="form" class="fill inline-form" ng-submit="run()" name="expression">
@@ -20,32 +20,41 @@
             </form>
           </navbar>
 
-          <div class="kable-panel-body">
-
-            <kable-renderer ng-class="{'kable-panel-on-top': !panel.config.editing}"
-              renderer-config="panel.config"
-              renderer-data="dataTables[$index]"
+          <div class="kable-panel-body" ng-repeat="view in panel.views track by $index" ng-if="panel.active == $index">
+            <kable-renderer ng-class="{'kable-panel-on-top': !panel.editing}"
+              renderer-config="view"
+              renderer-data="dataTables[$parent.$parent.$index]"
               class="kable-panel-content">
             </kable-renderer>
 
 
-            <div class="kable-panel-config" ng-class="{'kable-panel-on-top': panel.config.editing}">
+            <div class="kable-panel-config" ng-class="{'kable-panel-on-top': panel.editing}">
               <kable-panel-config
-                config-data="dataTables[$index]"
-                config-config="panel.config">
+                config-data="dataTables[$parent.$parent.$index]"
+                config-config="view">
               </kable-panel-config>
             </div>
-
-            <div class="kable-panel-icons">
-              <i class="fa fa-info-circle kable-panel-icon" ng-click="panel.config.editing = !panel.config.editing"></i>
-              <i class="fa fa-times-circle kable-panel-icon" ng-click="removePanel($index)"></i>
-            </div>
-
-
-
-
           </div>
 
+          <div class="kable-panel-view-tabs">
+
+            <div class="kable-panel-view-tab" ng-repeat="tab in panel.views track by $index" ng-click="panel.active = $index">
+              {{tab.type}} <i class="fa fa-times" ng-show="panel.views.length != 1" ng-click="removeView(panel, $index);"></i>
+            </div>
+
+            <div class="kable-panel-view-tab no-flex" ng-click="addView(panel)">
+              <i class="fa fa-plus"></i>
+            </div>
+
+            <div class="kable-panel-view-tab no-flex" ng-click="panel.editing = !panel.editing">
+              <i class="fa fa-info"></i>
+            </div>
+
+            <div class="kable-panel-view-tab no-flex" ng-show="state.panels.length != 1" ng-click="removePanel($index)">
+              <i class="fa fa-times-circle"></i>
+            </div>
+
+          </div>
 
         </div>
       </div>

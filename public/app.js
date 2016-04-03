@@ -54,10 +54,12 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
 
   var defaultPanel = {
     expression: '.index(_all)',
-    config: {
-      type: 'table',
-      editing: false,
-    }
+    active: 0,
+    editing: false,
+    views: [
+      {type: 'table'},
+      {type: 'docs'}
+    ]
   }
 
   $scope.dataTables = [];
@@ -68,10 +70,24 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
     $scope.run();
   }
 
+  $scope.addView = function (panel) {
+    panel.views.push(defaultPanel.views[0]);
+    panel.active = panel.views.length - 1;
+    $scope.run();
+  }
+
   $scope.removePanel = function (index) {
     $scope.state.panels.splice(index, 1);
     $scope.dataTables.splice(index, 1);
+    $scope.run();
   }
+
+  $scope.removeView = function (panel, index) {
+    if (index === panel.active) panel.active = 0;
+    panel.views.splice(index, 1);
+    $scope.run();
+  }
+
 
   $scope.run = function () {
     $scope.state.save();

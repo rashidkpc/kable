@@ -49,6 +49,8 @@
   box-shadow: 2px 2px 20px 0px rgba(214,214,214,1);
   background-color: @white;
   margin-bottom: 10px;
+  position: relative;
+  overflow-y: hidden;
 
   kable-renderer {
     position: relative;
@@ -74,11 +76,11 @@
 
   &-config {
     padding: 10px;
-    border-bottom: 5px solid @kibanaYellow1;
+    //border-bottom: 5px solid @kibanaYellow1;
   }
 
   &-content {
-    border-bottom: 5px solid @kibanaGreen1;
+    //border-bottom: 5px solid @kibanaGreen1;
   }
 
   &-on-top {
@@ -87,24 +89,45 @@
     transition-delay: @kabel-transition-speed;
   }
 
-  &-icons {
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
-    z-index: 20;
-  }
-
-  &-icon {
-    opacity: 0;
+  &-view-tab {
+    padding: 0px 15px;
+    line-height: 35px;
+    border-right: 1px solid @kibanaGray3;
+    color: @white;
+    flex: 1;
+    text-align: center;
 
     &:hover {
+      background-color: #000;
       opacity: 0.8 !important;
+    }
+
+    &.no-flex {
+      flex: 0;
+    }
+
+  }
+
+  &-view-tabs {
+    border-top: 5px solid @white;
+    position: absolute;
+    bottom: -35px;
+    background-color: #333;
+    opacity: 0.7;
+    width: 100%;
+    height: 40px;
+    z-index: 20;
+    display: flex;
+    flex-direction: row;
+    transition: transform @kabel-transition-speed;
+    transition-delay: 0.5s;
+
+    &:hover {
+      transform: translate(0px, -35px);
+      transition: transform @kabel-transition-speed;
     }
   }
 
-  &:hover &-icon {
-    opacity: 0.3;
-  }
 }
 
 .kable-quick-settings {
