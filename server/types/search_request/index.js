@@ -1,6 +1,8 @@
 var _ = require('lodash');
 var Type = require('../../lib/type');
 var flatten = require('../../lib/flatten');
+var flattenHit = require('../../lib/flatten_hit');
+
 var elasticsearch = require('elasticsearch');
 var client = new elasticsearch.Client({
   host: 'http://admin:notsecure@localhost:9200',
@@ -37,11 +39,14 @@ module.exports = new Type('searchRequest', {
   to: {
     dataTable: function (searchRequest, kblConfig) {
 
+      console.log(searchRequest.script);
+
       var request = searchRequest.request;
       request.body = {
-        size: searchRequest.docs || 0,
+        size: searchRequest.docs || 10,
         query: searchRequest.query,
         aggs: searchRequest.aggs,
+        fields: ['_source'],
         script_fields: _.mapValues(searchRequest.scripts, function (script) {
           return {script: {inline: script, lang: 'javascript'}};
         }),
@@ -67,7 +72,7 @@ module.exports = new Type('searchRequest', {
           _panel: {},
           requestBody: request,
           data: data,
-          docs: resp.hits.hits
+          docs: _.map(resp.hits.hits, flattenHit)
         }
       });
     }
