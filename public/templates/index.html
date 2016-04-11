@@ -38,7 +38,7 @@
 
           <div class="kable-panel-view-tabs">
 
-            <div class="kable-panel-view-tab" ng-repeat="tab in panel.views track by $index" ng-click="panel.active = $index">
+            <div class="kable-panel-view-tab" ng-repeat="tab in panel.views track by $index" ng-click="panel.active = $index; panel.editing = false;">
               {{tab.type}} <i class="fa fa-times" ng-show="panel.views.length != 1" ng-click="removeView(panel, $index);"></i>
             </div>
 

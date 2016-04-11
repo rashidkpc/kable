@@ -63,6 +63,7 @@ module.exports = new Type('searchRequest', {
 
       return client.search(request)
       .then(function (resp) {
+        console.log(resp);
         var data = resp.aggregations ? flatten(resp.aggregations) : {header: ['_all'], rows: [[resp.hits.total]]};
 
         //console.log(JSON.stringify(resp.hits, null, ' '));

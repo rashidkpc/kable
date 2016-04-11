@@ -25,19 +25,6 @@ require('ui/routes')
     template: require('plugins/kable/templates/index.html')
   });
 
-  /*
-  {
-    expression: '.index(_all)'
-    config: {
-      type: 'line',
-      x: '@timestamp',
-      y: 'count',
-      fill: 'top_user_count'
-      dotSize: 'user_cardinality'
-    }
-  }
-  */
-
 app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, timefilter, $window) {
   timefilter.enabled = true;
   $scope.timefilter = timefilter;
@@ -73,19 +60,19 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
   $scope.addView = function (panel) {
     panel.views.push(defaultPanel.views[0]);
     panel.active = panel.views.length - 1;
-    $scope.run();
+    $scope.state.save();
   }
 
   $scope.removePanel = function (index) {
     $scope.state.panels.splice(index, 1);
     $scope.dataTables.splice(index, 1);
-    $scope.run();
+    $scope.state.save();
   }
 
   $scope.removeView = function (panel, index) {
     if (index === panel.active) panel.active = 0;
     panel.views.splice(index, 1);
-    $scope.run();
+    $scope.state.save();
   }
 
 

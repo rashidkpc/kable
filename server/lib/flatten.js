@@ -11,14 +11,21 @@ module.exports = function flatten (obj) {
   var rows = [];
 
   function getMetricHandler (aggResult) {
-    if (aggResult.hits) { // top_hits
+    // Top_hits metric
+    if (aggResult.hits) {
       return function (row, val, key) {
         _.each(_.get(val, 'hits.hits[0].fields'), function (fieldVal, fieldName) {
           if (!headerComplete) addHeader(key + '_' + fieldName);
           row.push(fieldVal.join(', '));
         })
-
       };
+    // Doc Count metric
+    } else if (aggResult.doc_count != null) {
+      return function (row, val, key) {
+        if (!headerComplete) addHeader(key);
+        row.push(val.doc_count);
+      }
+    // Most single value metrics
     } else { // everything else
       return function (row, val, key) {
         if (!headerComplete) addHeader(key);
