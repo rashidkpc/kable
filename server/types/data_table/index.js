@@ -9,7 +9,7 @@ module.exports = new Type('dataTable', {
       var index = dataTable.data.header.indexOf(name);
       if (index === -1) throw new Error ('Unknown column: ' + name);
 
-      return _.pluck(dataTable.data.rows, index);
+      return _.map(dataTable.data.rows, index);
     },
     addColumn: function(dataTable, name, column) {
       if (column.length !== dataTable.data.rows.length) throw new Error ('All columns must be of equal length')

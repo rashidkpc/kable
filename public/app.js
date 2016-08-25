@@ -12,7 +12,7 @@ require('ui/chrome')
 .setBrand({
   'logo': 'url(' + timelionLogo + ') left no-repeat #444',
   'smallLogo': 'url(' + timelionLogo + ') left no-repeat #444'
-}).setTabs([]);
+});
 
 var app = require('ui/modules').get('app/kable', []);
 
@@ -53,7 +53,7 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
   $scope.state = new AppState({panels: [defaultPanel]});
 
   $scope.addPanel = function () {
-    $scope.state.panels.push(defaultPanel);
+    $scope.state.panels.push(_.cloneDeep(defaultPanel));
     $scope.run();
   }
 
