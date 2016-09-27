@@ -1,4 +1,5 @@
-var moment = require('moment');
+const moment = require('moment');
+const _ = require('lodash');
 require('plugins/kable/less/main.less');
 require('plugins/kable/components/kable_renderer/kable_renderer');
 require('plugins/kable/directives/textarea_input');
@@ -6,7 +7,7 @@ require('plugins/kable/directives/panel_config');
 
 require('ui/autoload/all');
 
-var timelionLogo = require('plugins/kable/kable.svg');
+const timelionLogo = require('plugins/kable/kable.svg');
 
 require('ui/chrome')
 .setBrand({
@@ -14,10 +15,10 @@ require('ui/chrome')
   'smallLogo': 'url(' + timelionLogo + ') left no-repeat #444'
 });
 
-var app = require('ui/modules').get('app/kable', []);
+const app = require('ui/modules').get('app/kable', []);
 
-var unsafeNotifications = require('ui/notify')._notifs;
-var panelTypes = require('plugins/kable/panels/load');
+const unsafeNotifications = require('ui/notify')._notifs;
+const panelTypes = require('plugins/kable/panels/load');
 
 require('ui/routes').enable();
 require('ui/routes')
@@ -29,7 +30,7 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
   timefilter.enabled = true;
   $scope.timefilter = timefilter;
 
-  var notify = new Notifier({location: 'Kable'});
+  const notify = new Notifier({location: 'Kable'});
 
   $scope.panelTypes = panelTypes;
   $scope.state = new AppState({expression: ''});
@@ -39,46 +40,54 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
     $scope.run();
   }
 
-  var defaultPanel = {
-    expression: '.index(_all)',
-    active: 0,
-    editing: false,
-    views: [
-      {type: 'table'},
-      {type: 'docs'}
-    ]
+  function getDefaultView() {
+    return {
+      type: 'table'
+    };
+  }
+
+  function getDefaultPanel() {
+    return {
+      expression: '.index(_all)',
+      active: 0,
+      editing: false,
+      views: [
+        getDefaultView(),
+        {type: 'docs'}
+      ]
+    };
   }
 
   $scope.dataTables = [];
-  $scope.state = new AppState({panels: [defaultPanel]});
+  $scope.state = new AppState({panels: [getDefaultPanel()]});
 
   $scope.addPanel = function () {
-    $scope.state.panels.push(_.cloneDeep(defaultPanel));
+    $scope.state.panels.push(getDefaultPanel());
     $scope.run();
-  }
+  };
 
   $scope.addView = function (panel) {
-    panel.views.push(defaultPanel.views[0]);
+    panel.views.push(getDefaultView());
     panel.active = panel.views.length - 1;
     $scope.state.save();
-  }
+  };
 
   $scope.removePanel = function (index) {
     $scope.state.panels.splice(index, 1);
     $scope.dataTables.splice(index, 1);
     $scope.state.save();
-  }
+  };
 
   $scope.removeView = function (panel, index) {
     if (index === panel.active) panel.active = 0;
     panel.views.splice(index, 1);
     $scope.state.save();
-  }
+  };
 
 
   $scope.run = function () {
     $scope.state.save();
-    var timefilterBounds = $scope.timefilter.getBounds();
+    const timefilterBounds = $scope.timefilter.getBounds();
     $scope.dataTables = _.map($scope.state.panels, function (panel) {
       return $http.post('../api/kable/run', {
         expression: panel.expression,
@@ -94,8 +103,8 @@ app.controller('kableHelloWorld', function ($scope, $http, AppState, Notifier, t
         notify.error(err);
         return {};
       });
-    })
-  }
+    });
+  };
 
   $scope.$listen(timefilter, 'fetch', $scope.run);
 
