@@ -1,5 +1,6 @@
 var Panel = require('../panel');
 var template = require('./index.html');
+require('./index.less');
 
 module.exports = new Panel('table', {
   help: 'Makes a pretty table',
