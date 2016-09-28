@@ -1,6 +1,6 @@
-var _ = require('lodash');
-var Strand = require('../lib/strand');
-var searchRequest = require('../types/search_request');
+const _ = require('lodash');
+const Strand = require('../lib/strand');
+const searchRequest = require('../types/search_request');
 
 
 module.exports = new Strand('timeseries', {
@@ -11,7 +11,7 @@ module.exports = new Strand('timeseries', {
     },
     {
       name: 'field',
-      types: ['string']
+      types: ['string', 'null']
     },
     {
       name: 'interval',
@@ -24,7 +24,9 @@ module.exports = new Strand('timeseries', {
   ],
   help: 'Create a timeseries',
   fn: function timeseries(args, kblConfig) {
-    var dateHistogramConfig = searchRequest.methods.appendDslField(args.field, {interval: args.interval || '1d'}, args._input_);
+    args.field = args.field || args._input_.timefield;
+
+    const dateHistogramConfig = searchRequest.methods.appendDslField(args.field, {interval: args.interval || '1y'}, args._input_);
 
     return searchRequest.methods.addAgg({
       searchRequest: args._input_,
