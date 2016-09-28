@@ -122,5 +122,5 @@ gulp.task('package', ['build'], function (done) {
 });
 
 gulp.task('dev', ['sync'], function (done) {
-  gulp.watch(['package.json', 'index.js', 'public/**/*', 'server/**/*'], ['sync', 'lint']);
+  gulp.watch(['package.json', 'index.js', 'public/**/*', 'server/**/*'], ['sync']);
 });
