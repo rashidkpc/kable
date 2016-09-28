@@ -1,20 +1,20 @@
-var _ = require('lodash');
-var Promise = require('bluebird');
-var Boom = require('boom');
-var fs = require('fs');
-var path = require('path');
+const _ = require('lodash');
+const Promise = require('bluebird');
+const Boom = require('boom');
+const fs = require('fs');
+const path = require('path');
 
-var Parser = require('pegjs').buildParser(fs.readFileSync(path.resolve(__dirname, './kable.peg'), 'utf8'));
-var argType = require('./arg_type');
-var types = require('../types');
-var castingProvider = require('./cast');
-var functions = require('./load_functions');
-var indexArguments = require('./index_arguments');
+const Parser = require('pegjs').buildParser(fs.readFileSync(path.resolve(__dirname, './kable.peg'), 'utf8'));
+const argType = require('./arg_type');
+const types = require('../types');
+const castingProvider = require('./cast');
+const functions = require('./load_functions');
+const indexArguments = require('./index_arguments');
 
 module.exports = function (kblConfig) {
   // Invokes a modifier function, resolving arguments into series as needed
   function invoke(fnName, args) {
-    var functionDef = functions[fnName];
+    const functionDef = functions[fnName];
     if (!functionDef) throw new Error ('Unknown function: ' + fnName);
 
     // Make the arguments to the function into an object
@@ -37,20 +37,20 @@ module.exports = function (kblConfig) {
       // Validate and cast arguments, the piped object is available as _pipe_
       return _.mapValues(args, function (arg, name) {
         // Arguments must be defined on the function, or the function must supply a "_default_" argument
-        var argDef = functionDef.args.byName[name] || functionDef.args.byName['_default_'];
+        const argDef = functionDef.args.byName[name] || functionDef.args.byName._default_;
 
         if (!argDef) throw 'Unknown argument "' + name + '" supplied to ' + fnName;
 
-        var cast = castingProvider(types, kblConfig)
+        const cast = castingProvider(types, kblConfig);
 
         try {
-          return cast(arg, argDef.types)
+          return cast(arg, argDef.types);
         } catch (e) {
           throw e;
           // + '" as "' + name + '" supplied to ' + fnName
         }
       });
-    })
+    });
 
     // Finally pass the arguments to the function
     args = Promise.props(args)
@@ -64,26 +64,26 @@ module.exports = function (kblConfig) {
   function invokeChain(chainObj, result) {
     if (chainObj.chain.length === 0) return invoke('finalize', [result]);
 
-    var chain = _.clone(chainObj.chain);
-    var link = chain.shift();
+    const chain = _.clone(chainObj.chain);
+    const link = chain.shift();
 
-    var args = link.arguments || {};
+    const args = link.arguments || {};
     args.unshift(result || {type: 'null', value: null});
 
 
-    var promise = invoke(link.function, args);
+    const promise = invoke(link.function, args);
     return promise.then(function (result) {
       return invokeChain({type:'chain', chain: chain}, result);
     });
   }
 
   return function run(payload) {
-    var result;
+    let result;
 
-    var expression = payload.expression;
+    const expression = payload.expression;
 
     if (expression && expression.trim().length) {
-      var chain = Parser.parse(expression);
+      const chain = Parser.parse(expression);
       result = invokeChain(chain);
     } else {
       result = {type: 'null', value: null};
@@ -93,11 +93,8 @@ module.exports = function (kblConfig) {
     .catch(function (e) {
       return Promise.reject(Boom.badRequest(e.toString()));
     });
-  }
-}
-
-
-
+  };
+};
 
 function logObj(obj, thing) {
   console.log(JSON.stringify(obj, null, ' '));
