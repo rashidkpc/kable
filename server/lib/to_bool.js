@@ -6,72 +6,28 @@ var path = require('path');
 
 var Parser = require('pegjs').buildParser(fs.readFileSync(path.resolve(__dirname, './search.peg'), 'utf8'));
 
-var operators = {
-  lte: '<=',
-  lt:  '<',
-  eq:  '==',
-  gt:  '>',
-  gte: '>=',
-};
-
-function toQuery(clause, scripts) {
+function toQuery(clause) {
   var query = {};
-  var scripts = scripts || {};
   if (clause.type === 'group' || clause.type === 'search') {
-    query = toBool(clause.clauses, scripts);
-  } else if (scripts[clause.field]) {
-    query = scriptToQuery(`${scripts[clause.field]} ${operators[clause.type]} param`, clause.value);
+    query = toBool(clause.clauses);
   } else {
-    var script = clause.field ? `_source.${clause.field} === param` :
-    `var result = []; var it = doc['_all'].values.iterator(); while (it.hasNext()) {val=it.next(); if (param == val) {result.push(val)};} result.length;`;
-    query = scriptToQuery(script, clause.value);
+    if (clause.type === 'eq') {
+      _.set(query, `match.${clause.field}`, {query: clause.value, type: 'phrase'});
+    } else if (_.contains(['lt', 'gt', 'lte', 'gte'], clause.type)) {
+      _.set(query, `range.${clause.field}.${clause.type}`, clause.value);
+    } else {
+      throw 'Unknown operator: ' + clause.type;
+    }
   }
-
-    /*
-      if (clause.type === 'eq') {
-        _.set(query, `match.${clause.field}`, {query: clause.value, type: "phrase"});
-      } else if (_.contains(['lt', 'gt', 'lte', 'gte'], clause.type)) {
-        _.set(query, `range.${clause.field}.${clause.type}`, clause.value);
-      } else {
-        throw 'Unknown operator: ' + clause.type;
-      }
-      */
-
-  logObj(query);
 
   return query;
 }
-
-function scriptToQuery (script, value) {
-  return {
-    bool: {
-      filter: {
-        script: {
-          script: script,
-          params: {
-            param: value
-          },
-          lang: 'javascript'
-        }
-      }
-    }
-  };
-}
-
-
-{must_not: [
-  {bool:{filter:{script:{}}}}
-]}
 
 function toBool(clauses, scripts) {
   return _.reduce(clauses, function (context, clause) {
     context.bool[clause.imperative].push(toQuery(clause, scripts));
     return context;
   }, {bool: {must: [], must_not: [], should: []}});
-}
-
-function logObj(obj) {
-  console.log(JSON.stringify(obj, null, ' '));
 }
 
 module.exports = toQuery;
