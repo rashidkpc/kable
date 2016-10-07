@@ -25,28 +25,25 @@ module.exports = new Strand('latest', {
 
     var agg = {};
 
-    var sortObj = {_script: {}};
-    sortObj._script = searchRequest.methods.appendDslField(args.by, {type: 'number', order: 'desc'}, args._input_);
+    var sortObj = {};
+    sortObj[args.by] = {order: 'desc'};
 
     console.log('2');
-
-    var scriptFieldsObj = {};
-    scriptFieldsObj[args.field.replace('.', '_')] = searchRequest.methods.appendDslField(args.field, {}, args._input_);
 
     console.log('3');
 
 
-    agg['top_hits'] = {
+    agg.top_hits = {
       size: 1,
       sort: sortObj,
-      script_fields: scriptFieldsObj
+      _source: args.field
     };
 
 
     searchRequest.methods.addAgg({
       searchRequest: args._input_,
-      newContext: false,
-      name: 'latest',
+      newContext: false, // because this is a metric agg
+      name: `latest_${args.field.replace('.', '_')}_by_${args.by}`,
       agg: agg
     });
 

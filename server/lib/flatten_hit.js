@@ -1,9 +1,9 @@
 var _ = require('lodash');
 
-module.exports = function flattenHit(hit) {
+module.exports = function flattenHit(hit, metaFields) {
   var flat = {};
 
-  var metaFields = ['_type', '_index'];
+  metaFields = metaFields || ['_type', '_index'];
 
   // recursively merge _source
   (function flatten(obj, keyPrefix) {
