@@ -39,8 +39,8 @@ module.exports = new Strand('table', {
         _.each(oldRows, function (row, i) {
           newRows[i] = newRows[i] || [];
           newRows[i].push(row[index]);
-        })
-      })
+        });
+      });
 
       output.data.rows = newRows;
       output.data.header = newHeader;
@@ -49,7 +49,7 @@ module.exports = new Strand('table', {
     if (args.as) {
       _.each(args.as, function (column, i) {
         output.data.header[i] = column;
-      })
+      });
     }
 
     return output;
