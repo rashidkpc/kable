@@ -33,7 +33,7 @@ module.exports = new Type('searchRequest', {
         request: {
           index: '_all'
         }
-      }
+      };
     }
   },
   to: {
@@ -46,11 +46,8 @@ module.exports = new Type('searchRequest', {
         size: searchRequest.docs || 10,
         query: searchRequest.query,
         aggs: searchRequest.aggs,
-        fields: ['_source'],
-        script_fields: _.mapValues(searchRequest.scripts, function (script) {
-          return {script: {inline: script, lang: 'javascript'}};
-        }),
-      }
+        fields: ['_source']
+      };
 
       if (searchRequest.timefield) {
         var wrapper = {bool:{filter:{range:{}}}};
@@ -74,7 +71,7 @@ module.exports = new Type('searchRequest', {
           requestBody: request,
           data: data,
           docs: _.map(resp.hits.hits, flattenHit)
-        }
+        };
       });
     }
   }
