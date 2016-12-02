@@ -1,6 +1,6 @@
 {
   "name": "kable",
-  "version": "0.1.0",
+  "version": "kibana",
   "description": "Weeeeee",
   "main": "gulpfile.js",
   "scripts": {

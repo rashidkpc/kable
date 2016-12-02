@@ -110,7 +110,7 @@ module.exports = new Panel('timechart', {
             return _.chain(config.color)
             .map(function (color) {return columns.indexOf(color);})
             .map(function (index) {return row[index];})
-            .values().join('::')
+            .values().join('::');
           });
         } else {
           grouped = {
@@ -126,7 +126,7 @@ module.exports = new Panel('timechart', {
             ];
 
 
-            function bubbleProvider (flotColumns) {
+            function bubbleProvider(flotColumns) {
               var length = flotColumns[0].length;
               var radii = flotColumns[2] || _.fill(Array(length), 30);
               var fill = flotColumns[3] || _.fill(Array(length), 0);
@@ -142,8 +142,7 @@ module.exports = new Panel('timechart', {
                 ctx.arc(x, y, radius, 0, Math.PI * 2, false);
                 ctx.globalAlpha = pointFill;
                 point++;
-              }
-              return bubble;
+              };
             }
 
             var points;
@@ -164,7 +163,7 @@ module.exports = new Panel('timechart', {
               data: _.zip.apply(this, flotColumns),
               shadowSize: 0
             };
-          })
+          });
         }));
 
         $elem.height($elem.parent().parent().height());
@@ -181,6 +180,6 @@ module.exports = new Panel('timechart', {
 
       drawPlot();
 
-    }
+    };
   }
 });
