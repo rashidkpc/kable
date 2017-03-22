@@ -20,20 +20,6 @@ module.exports = function (kibana) {
           };
         }
       },
-      modules: {
-        flot_kable$: {
-          path: path.resolve(__dirname, 'bower_components/flot/jquery.flot'),
-          imports: 'jquery'
-        },
-        flotTime_kable$: {
-          path: path.resolve(__dirname, 'bower_components/flot/jquery.flot.time'),
-          imports: 'flot_kable'
-        },
-        flotPie_kable$: {
-          path: path.resolve(__dirname, 'bower_components/flot/jquery.flot.pie'),
-          imports: 'flot_kable'
-        }
-      },
     },
 
     config: function (Joi) {
