@@ -3,9 +3,7 @@ var getColumn = require('plugins/kable/lib/get_column');
 
 var _ = require('lodash');
 var $ = require('jquery');
-
-require('flot_kable');
-require('flotTime_kable');
+require('plugins/metrics/visualizations/lib/flot');
 
 
 module.exports = new Panel('timechart', {

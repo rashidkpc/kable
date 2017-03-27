@@ -46,7 +46,7 @@ module.exports = new Type('searchRequest', {
         size: searchRequest.docs || 10,
         query: searchRequest.query,
         aggs: searchRequest.aggs,
-        fields: ['_source']
+        //fields: ['_source']
       };
 
       if (searchRequest.timefield) {

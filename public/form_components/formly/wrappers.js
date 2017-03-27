@@ -1,4 +1,5 @@
 require('ui-select');
+require('angular');
 
 var app = require('ui/modules').get('apps/kable', [
   require('angular-formly'),

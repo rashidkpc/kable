@@ -4,8 +4,7 @@ var getColumn = require('plugins/kable/lib/get_column');
 var _ = require('lodash');
 var $ = require('jquery');
 
-require('flot_kable');
-require('flotPie_kable')
+require('plugins/metrics/visualizations/lib/flot');
 
 module.exports = new Panel('pies', {
   help: 'Draw a timeseries chart',

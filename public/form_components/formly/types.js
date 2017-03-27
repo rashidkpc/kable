@@ -2,7 +2,11 @@ require('./wrappers');
 require('ui-select');
 require('ui-select/dist/select.css');
 
-var app = require('ui/modules').get('apps/kable', [require('angular-formly'), require('angular-formly-templates-bootstrap'), 'ui.select']);
+const formly = require('angular-formly');
+const formlyTemplate = require('angular-formly-templates-bootstrap');
+const angular = require('angular');
+
+var app = require('ui/modules').get('apps/kable', [formly, formlyTemplate, 'ui.select']);
 
 app.config(function (formlyConfigProvider) {
 

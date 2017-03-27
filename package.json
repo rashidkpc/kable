@@ -1,6 +1,9 @@
 {
   "name": "kable",
-  "version": "kibana",
+  "version": "0.1.1",
+  "kibana": {
+    "version": "kibana"
+  },  
   "description": "Weeeeee",
   "main": "gulpfile.js",
   "scripts": {
@@ -12,7 +15,6 @@
   "devDependencies": {
     "bluebird": "^3.1.1",
     "gulp": "^3.9.0",
-    "gulp-eslint": "^1.1.1",
     "gulp-gzip": "^1.2.0",
     "gulp-tar": "^1.8.0",
     "gulp-util": "^3.0.7",
@@ -22,13 +24,11 @@
     "rsync": "^0.4.0"
   },
   "dependencies": {
-    "@elastic/eslint-config-kibana": "^0.2.0",
     "angular": "^1.5.3",
     "angular-formly": "^8.2.0",
     "angular-formly-templates-bootstrap": "^6.3.2",
     "angular-ui-bootstrap": "^1.2.5",
     "api-check": "^7.5.5",
-    "babel-eslint": "^6.1.2",
     "babel-register": "^6.3.13",
     "bluebird": "^3.1.1",
     "bootstrap": "^3.3.6",
