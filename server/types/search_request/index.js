@@ -64,11 +64,11 @@ module.exports = new Type('searchRequest', {
         request.body.query = wrapper;
       }
 
-      //console.log(JSON.stringify(request.body, null, ' '));
+      console.log(JSON.stringify(request.body, null, ' '));
 
       return client.search(request)
       .then(function (resp) {
-        console.log(JSON.stringify(resp, null, ' '));
+        //console.log(JSON.stringify(resp, null, ' '));
         var data = resp.aggregations ? flatten(resp.aggregations) : {header: ['_all'], rows: [[resp.hits.total]]};
 
         //console.log(JSON.stringify(resp.hits, null, ' '));
