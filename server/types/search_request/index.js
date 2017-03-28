@@ -39,14 +39,22 @@ module.exports = new Type('searchRequest', {
   to: {
     dataTable: function (searchRequest, kblConfig) {
 
-      console.log(searchRequest.script);
+      //console.log(searchRequest.scripts);
 
       var request = searchRequest.request;
       request.body = {
         size: searchRequest.docs || 10,
         query: searchRequest.query,
         aggs: searchRequest.aggs,
-        //fields: ['_source']
+        stored_fields: ['_source'],
+        script_fields: _.mapValues(searchRequest.scripts, (script, name) => {
+          return {
+            script: {
+              lang: 'painless',
+              inline: script
+            }
+          };
+        })
       };
 
       if (searchRequest.timefield) {
@@ -56,11 +64,11 @@ module.exports = new Type('searchRequest', {
         request.body.query = wrapper;
       }
 
-      console.log(JSON.stringify(request.body, null, ' '));
+      //console.log(JSON.stringify(request.body, null, ' '));
 
       return client.search(request)
       .then(function (resp) {
-        console.log(resp);
+        console.log(JSON.stringify(resp, null, ' '));
         var data = resp.aggregations ? flatten(resp.aggregations) : {header: ['_all'], rows: [[resp.hits.total]]};
 
         //console.log(JSON.stringify(resp.hits, null, ' '));
