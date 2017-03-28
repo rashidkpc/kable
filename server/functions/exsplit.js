@@ -32,11 +32,7 @@ module.exports = new Strand('exsplit', {
     var output = args._input_;
     var field = getFieldScript(args.src, args._input_);
     output.scripts = output.scripts || {};
-    output.scripts[args.dest] = `(function () {
-      var result = ${field};
-      result = result.split('${args.seperator}'); // TODO: This will break on ' single quotes. String concat ftl.
-      return result[${args.index}]
-    }())`;
+    output.scripts[args.dest] = `(Collections.list(new StringTokenizer(${field},'${args.seperator}'))[${args.index}])`;
 
 
     return output;
