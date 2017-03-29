@@ -1,7 +1,7 @@
 # kable
 Does stuff with like, fields, and expressions, and stuff. Also things.
 
-## Pro tips:
+## Pro tips
 
 You need to turn on regexs in Painless if you want any of the field extraction stuff
 
