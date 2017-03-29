@@ -13,12 +13,12 @@ module.exports = new Strand('exregex', {
       types: ['string']
     },
     {
-      name: 'regex',
+      name: 'replace',
       types: ['string'],
     },
     {
-      name: 'index',
-      types: ['number']
+      name: 'with',
+      types: ['string']
     },
     {
       name: 'dest',
@@ -26,17 +26,12 @@ module.exports = new Strand('exregex', {
     },
   ],
   help: 'Make with the querying',
-  fn: function search (args, kblConfig) {
-
-    // TODO
+  fn: function search(args, kblConfig) {
     var output = args._input_;
     var field = getFieldScript(args.src, args._input_);
     output.scripts = output.scripts || {};
-    output.scripts[args.dest] = `(function () {
-      var result = ${field};
-      result = result.match(${args.regex}) || [];
-      return result[${args.index + 1}]
-    }())`;
+    // /^.*\.(.*)\.*\/.*$/
+    output.scripts[args.dest] = `${args.replace}.matcher(${field}).replaceAll('${args.with}')`;
 
 
     return output;
